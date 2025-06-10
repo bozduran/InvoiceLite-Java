@@ -1,0 +1,89 @@
+Shop Registry / POS System - Core Functionalities
+1. Product Management
+
+    Product Database (ID, name, barcode, price, category, supplier)
+
+    Barcode/QR Scanning (quick item lookup)
+
+    Real-time Stock Tracking (auto-update quantities, low-stock alerts)
+
+    Categories & Tags (e.g., "Electronics," "Perishables")
+
+    Pricing Rules (bulk discounts, seasonal promotions)
+
+2. Sales Processing
+
+    Checkout Features:
+
+        Add/remove items from cart
+
+        Apply discounts (percentage/fixed amount)
+
+        Split payments (cash + card)
+
+        Refunds/returns (with receipt tracking)
+
+    Receipt Generation (print/email, customizable templates)
+
+3. Customer Management
+
+    Customer Profiles (name, contact, purchase history)
+
+    Loyalty Programs (points, VIP tiers)
+
+    Membership Discounts (auto-apply at checkout)
+
+4. Cash & Payment Handling
+
+    Cash Drawer Control (open/close, starting float)
+
+    Payment Methods:
+
+        Cash, credit/debit cards, mobile wallets
+
+        Partial payments, IOUs (for trusted customers)
+
+    End-of-Day Reconciliation (sales vs. cash in drawer)
+
+5. Reporting & Analytics
+
+    Sales Reports (daily/weekly/monthly, top-selling items)
+
+    Tax Calculations (VAT/GST breakdown)
+
+    Profit/Loss Statements (revenue vs. costs)
+
+6. Employee Management
+
+    Role-Based Access:
+
+        Cashier (basic sales)
+
+        Manager (refunds, overrides)
+
+        Admin (full system control)
+
+    Shift Logs (clock-in/out, sales per employee)
+
+7. Hardware & Integrations
+
+    Supported Devices:
+
+        Barcode scanners, receipt printers, cash drawers
+
+        Card readers (contactless/swipe/chip)
+
+    Software Integrations:
+
+        Accounting (QuickBooks, Xero)
+
+        E-commerce (sync online/offline stock)
+
+8. Security & Compliance
+
+    User Authentication (PIN/password login)
+
+    Audit Logs (track all transactions/changes)
+
+    Data Backups (auto-sync to cloud/local storage)
+
