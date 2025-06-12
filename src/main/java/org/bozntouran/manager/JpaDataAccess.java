@@ -26,6 +26,7 @@ public class JpaDataAccess implements DataAccesor {
 
         if (jpaDataAccess == null) {
             jpaDataAccess = new JpaDataAccess();
+
         }
 
         return jpaDataAccess;
@@ -34,9 +35,12 @@ public class JpaDataAccess implements DataAccesor {
     @Override
     public void intialize() {
 
-        sessionFactory =
-                Persistence.createEntityManagerFactory("org.bozntouran.entities");
-        entityManager = sessionFactory.createEntityManager();
+        if (entityManager == null) {
+            sessionFactory =
+                    Persistence.createEntityManagerFactory("org.bozntouran.entities");
+            entityManager = sessionFactory.createEntityManager();
+        }
+
 
     }
 

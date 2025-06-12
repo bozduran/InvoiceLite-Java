@@ -3,7 +3,6 @@ package org.bozntouran.gui;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.smartcardio.Card;
 import javax.swing.*;
 import java.awt.*;
 
@@ -18,24 +17,22 @@ public class ContentPanel extends JPanel {
     public ContentPanel() {
         setLayout(new BorderLayout());
 
-        tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("new",new JColorChooser());
+/*        tabbedPane = new JTabbedPane();
+        tabbedPane.addTab("new",new JColorChooser());*/
 
 
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
         // Initialize the tabbedPane
+/*
         tabbedPane = new JTabbedPane();
+*/
 
         // Add the tabbedPane to the cardPanel with a unique name
-        cardPanel.add(tabbedPane, "TabbedPane");
+        //cardPanel.add(tabbedPane, "TabbedPane");
 
         add(cardPanel, BorderLayout.CENTER);
-    }
-
-    public void addNewTab(JComponent jComponent,String tabName){
-        this.tabbedPane.addTab(tabName,jComponent);
     }
 
     public void addNewCard(JPanel jPanel,String name){
@@ -48,11 +45,5 @@ public class ContentPanel extends JPanel {
         }
     }
 
-    public void clearTabs(){
-        this.tabbedPane.removeAll();
-    }
 
-    public void removeTab(int index){
-        this.tabbedPane.remove(index);
-    }
 }

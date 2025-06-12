@@ -1,12 +1,10 @@
 package org.bozntouran.gui;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 
 public class ReceiptsMenu extends JMenu {
 
     private ContentPanel contentPanel;
-    private JMenuItem newReceipt;
 
     public ReceiptsMenu(ContentPanel contentPanel){
         // get the content panel
@@ -14,7 +12,7 @@ public class ReceiptsMenu extends JMenu {
 
         setText("Receipts");
         // add the rest of the menu
-        newReceipt = new JMenuItem("New receipt");
+        JMenuItem newReceipt = new JMenuItem("New receipt");
 
         newReceipt.addActionListener(e -> createNewReceiptTab());
 
@@ -27,7 +25,6 @@ public class ReceiptsMenu extends JMenu {
     }
 
     public void createNewReceiptTab() {
-        contentPanel.clearTabs();
         contentPanel.addNewCard(new ReceiptsPanel(),"Receipt");
         contentPanel.showCard("Receipt");
     }

@@ -18,7 +18,7 @@ public class ShoppingCart {
 
 
     public ShoppingCart(){
-        cartItems = new HashMap<>(50);
+        cartItems = new HashMap<>(10);
     }
 
     public void addToCart(Product product){
@@ -48,7 +48,12 @@ public class ShoppingCart {
     }
 
     public void decrementCartItemQuantity(int productId){
-        cartItems.get(productId).decreaseQuantity();
+        if(cartItems.get(productId).getQuantity() == 1){
+            cartItems.remove(productId);
+        }else{
+            cartItems.get(productId).decreaseQuantity();
+        }
+
     }
 
     public void incrementCartItemQuantity(int productId){
@@ -73,4 +78,7 @@ public class ShoppingCart {
         return dataList.toArray(new Object[0][]);
     }
 
+    public void removeItem(int productId) {
+        cartItems.remove(productId);
+    }
 }

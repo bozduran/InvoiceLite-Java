@@ -1,7 +1,5 @@
 package org.bozntouran.dto;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import org.bozntouran.entities.Product;
 

@@ -1,10 +1,7 @@
 package org.bozntouran.gui;
 
-import lombok.AllArgsConstructor;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 
 public class HeaderPanel extends JPanel {
@@ -35,20 +32,9 @@ public class HeaderPanel extends JPanel {
         menuBar.add(editMenu);
         add(menuBar);
 
-
-
-
-    }
-
-    public void newReceipt(){
-        receiptsMenu.createNewReceiptTab();
     }
 
 
-    public void newClient() {
-        contentPanel.addNewCard(new NewClientPanel() ,"NewClient");
-        contentPanel.showCard("NewClient");
-    }
 
     public JMenuItem exitMenuItem() {
         JMenuItem exitMenuItem = new JMenuItem("Έξοδος");
@@ -61,7 +47,8 @@ public class HeaderPanel extends JPanel {
         JMenuItem backToMainWindowMenuItem = new JMenuItem("Πίσω στην αρχική");
 
         backToMainWindowMenuItem.addActionListener(e -> {
-            contentPanel.clearTabs();
+            // contentPanel.clearCards();
+
             contentPanel.showCard("Main");
         });
         return backToMainWindowMenuItem;
@@ -70,5 +57,16 @@ public class HeaderPanel extends JPanel {
     public void showAllReceipts() {
         contentPanel.addNewCard(new ShowReceiptsPanel() ,"ShowReceipts");
         contentPanel.showCard("ShowReceipts");
+    }
+
+    public void newReceipt(){
+        contentPanel.addNewCard(new ReceiptsPanel(),"Receipt");
+        contentPanel.showCard("Receipt");
+    }
+
+
+    public void newClient() {
+        contentPanel.addNewCard(new NewClientPanel() ,"NewClient");
+        contentPanel.showCard("NewClient");
     }
 }

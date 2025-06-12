@@ -27,36 +27,106 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
     private JLabel totalPriceJLable;
     private JLabel totalQuantityLable;
 
+    private final Object[] columnNames = {"A/A", "Ονομα Προιοντος","Περιγραφή","Ποσό","Αριθμός προιόντων" };
+
+    public void initialize(){
+        this.barcodeString = new StringBuilder();
+        this.shoppingCart = new ShoppingCart();
+        dataAccesor = JpaDataAccess.getInstance();
+
+
+    }
 
 
     public ReceiptsPanel() {
+        initialize();
 
         setLayout(new GridLayout(3, 1));
-        this.barcodeString = new StringBuilder();
-        this.shoppingCart = new ShoppingCart();
 
         setFocusable(true);
         requestFocusInWindow();
         addKeyListener(this);
-        //
-        dataAccesor = JpaDataAccess.getInstance();
-        //dataAccesor.intialize();
 
+        // this is the customer info panel
         this.customerInfoPanel = new CustomerInfoPanel();
         add(customerInfoPanel);
 
+
+        // jtable and option for cart management
+        JPanel orderItemsPanel = createOrderItemPanel();
+
+        add(orderItemsPanel);
+
+        JPanel printInvoicePanel = summaryPanel();
+
+        focusByMouseClick();
+
+        add(printInvoicePanel);
+
+        addTestData();
+
+    }
+
+
+    private JPanel createOrderItemPanel(){
+
         // show scanned products
-        String[] columnNames = {"A/A", "Ονομα Προιοντος","Περιγραφή" , "Κθαρο ποσο"};
         shoppingCartTable = new DefaultTableModel(null , columnNames);
 
         JTable orderItemsJTable = new JTable(shoppingCartTable);
         orderItemsJTable.addKeyListener(this); //regain focus here so scanner can add new products
-        add(orderItemsJTable);
+
+        // jtable and option for cart management
+        JPanel orderItemsPanel = new JPanel(new GridLayout(2,1));
+        orderItemsPanel.add(new JScrollPane(orderItemsJTable));
+
+        JPanel orderManagementButtons = createOrderManagementPanel(orderItemsJTable);
+        orderItemsPanel.add(orderManagementButtons);
+
+        return orderItemsPanel;
+    }
+
+    private JPanel createOrderManagementPanel(JTable orderItemsJTable) {
+        JPanel orderManagementButtons = new JPanel(new GridLayout(1,3));
+        orderManagementButtons.add(new JButton(new AbstractAction( "-" ) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object selectedObject = shoppingCart.getDataVector()[orderItemsJTable.getSelectedRow()][0];
+                shoppingCart.decrementCartItemQuantity(Integer.parseInt(selectedObject.toString()) );
+                refreshShoppingCart();
+
+            }
+        }));
+        orderManagementButtons.add(new JButton(new AbstractAction("+") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object selectedObject = shoppingCart.getDataVector()[orderItemsJTable.getSelectedRow()][0];
+                shoppingCart.incrementCartItemQuantity(Integer.parseInt(selectedObject.toString()) );
+                refreshShoppingCart();
+
+
+            }
+        }));
+        orderManagementButtons.add(new JButton(new AbstractAction("Αφαίρεση προιόντος") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object selectedObject = shoppingCart.getDataVector()[orderItemsJTable.getSelectedRow()][0];
+                shoppingCart.removeItem(Integer.parseInt(selectedObject.toString()) );
+                refreshShoppingCart();
+
+
+            }
+        }));
+        
+        return orderManagementButtons;
+    }
+
+    public JPanel summaryPanel(){
 
         /// This is used to see the price and quantity add to the bottom
 
-        totalPriceJLable = new JLabel("Τελική τιμή: " + String.valueOf(0));
-        totalQuantityLable = new JLabel("Συνολικα προιοντα: " + String.valueOf( 0));
+        totalPriceJLable = new JLabel("Τελική τιμή: " + 0);
+        totalQuantityLable = new JLabel("Συνολικα προιοντα: " + 0);
 
         JButton printInvoiceButton = new JButton("Print Invoice");
 
@@ -67,10 +137,36 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
         printInvoicePanel.add(totalPriceJLable);
         printInvoicePanel.add(totalQuantityLable);
         printInvoicePanel.add(printInvoiceButton);
+        return printInvoicePanel;
+    }
 
-        focusByMouseClick();
+    private void addTestData() {
+        shoppingCart.addToCart(dataAccesor.getProduct("087229758196"));
+        shoppingCart.addToCart(dataAccesor.getProduct("454426743190"));
+        shoppingCart.addToCart(dataAccesor.getProduct("814177540036"));
+        shoppingCart.addToCart(dataAccesor.getProduct("445637750351"));
+        shoppingCart.addToCart(dataAccesor.getProduct("805688256537"));
+        shoppingCart.addToCart(dataAccesor.getProduct("624338181415"));
+        shoppingCart.addToCart(dataAccesor.getProduct("094698177204"));
+        shoppingCart.addToCart(dataAccesor.getProduct("677357207482"));
+        shoppingCart.addToCart(dataAccesor.getProduct("961002799090"));
+        shoppingCart.addToCart(dataAccesor.getProduct("229884239035"));
+        shoppingCart.addToCart(dataAccesor.getProduct("769187181570"));
+        shoppingCart.addToCart(dataAccesor.getProduct("087229758196"));
 
-        add(printInvoicePanel);
+        shoppingCart.addToCart(dataAccesor.getProduct("752349453457"));
+        shoppingCart.addToCart(dataAccesor.getProduct("950289558177"));
+        shoppingCart.addToCart(dataAccesor.getProduct("815570758405"));
+        shoppingCart.addToCart(dataAccesor.getProduct("223013462770"));
+        shoppingCart.addToCart(dataAccesor.getProduct("201408554191"));
+        shoppingCart.addToCart(dataAccesor.getProduct("250331593724"));
+        shoppingCart.addToCart(dataAccesor.getProduct("986502051845"));
+        shoppingCart.addToCart(dataAccesor.getProduct("091376362653"));
+        shoppingCart.addToCart(dataAccesor.getProduct("279323822968"));
+        shoppingCart.addToCart(dataAccesor.getProduct("444751927349"));
+        shoppingCart.addToCart(dataAccesor.getProduct("156845626263"));
+        shoppingCart.addToCart(dataAccesor.getProduct("009025109439"));
+        refreshShoppingCart();
 
     }
 
@@ -87,8 +183,8 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
           });
     }
 
-    public void addToShoppingCart(Product product){
-        String[] columnNames = {"A/A", "Ονομα Προιοντος","Περιγραφή","Ποσό","Αριθμός προιόντων"};
+    public void refreshShoppingCart(){
+        requestFocusInWindow(true);
         this.shoppingCartTable.setDataVector(shoppingCart.getDataVector(),columnNames);
     }
 
@@ -109,7 +205,7 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
 
                 shoppingCart.addToCart(p);
                 updatePriceAndQuantity();
-                addToShoppingCart(p);
+                refreshShoppingCart();
             }
 
             this.barcodeString = new StringBuilder();

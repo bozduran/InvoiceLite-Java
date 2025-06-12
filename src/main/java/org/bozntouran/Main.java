@@ -1,7 +1,5 @@
 package org.bozntouran;
 
-import jakarta.persistence.*;
-import org.bozntouran.entities.Receipt;
 import org.bozntouran.gui.ContentPanel;
 import org.bozntouran.gui.FooterPanel;
 import org.bozntouran.gui.HeaderPanel;
@@ -26,7 +24,7 @@ public class Main {
         ContentPanel contentPanel = new ContentPanel();
         HeaderPanel headerPanel = new HeaderPanel(contentPanel);
         FooterPanel footerPanel = new FooterPanel();
-        contentPanel.addNewCard(new MainFunctions(headerPanel ,contentPanel),"Main");
+        contentPanel.addNewCard(new MainFunctions(headerPanel, contentPanel), "Main");
 
         contentPanel.showCard("Main");
 
