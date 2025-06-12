@@ -1,5 +1,6 @@
 package org.bozntouran.gui;
 
+import org.bozntouran.dto.CartItem;
 import org.bozntouran.entities.Product;
 import org.bozntouran.entities.Receipt;
 import org.bozntouran.invoice.Invoice;
@@ -231,8 +232,18 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
         totalQuantityLable.setText("Total quantity: " + String.valueOf(shoppingCart.getTotalQuantity()));
     }
 
-    public void printInvoice(){
+    public void updateQuantityInDataBase(){
+        var cartItems = shoppingCart.getCartItems();
 
+        for (CartItem tempCartItem:cartItems.values()){
+            System.out.println(tempCartItem.toString());
+            dataAccesor.updateProductQuantity("-" , tempCartItem.getId(),tempCartItem.getQuantity());
+        }
+
+    }
+
+    public void printInvoice(){
+        updateQuantityInDataBase();
         invoice = new SimpleReceipt();
         invoice.setCartItems(shoppingCart.getCartItems());
         invoice.setTotalPrice( shoppingCart.getTotalPrice());

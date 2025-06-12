@@ -32,4 +32,6 @@ public interface DataAccesor {
     Optional<List<Manufacturer>> getManufacturers();
 
     boolean saveProduct(Product product);
+
+    boolean updateProductQuantity(String addOrRemove, int id, int quantity);
 }

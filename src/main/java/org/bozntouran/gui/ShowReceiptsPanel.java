@@ -6,6 +6,7 @@ import org.bozntouran.manager.JpaDataAccess;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,8 +54,8 @@ public class ShowReceiptsPanel extends JPanel {
 
     public void deleteReceipt(){
         receiptsInfoPanel.deleteReceipt();
-        receipts = dataAccesor.getReceipts();
-        receiptJList.setListData(receipts.get().toArray(new Receipt[0]));
+        // if it has data return data or return an empty arraylist
+        receiptJList.setListData(receipts.orElseGet(ArrayList::new).toArray(new Receipt[0]));
         listScroller.repaint();
     }
 
@@ -64,7 +65,7 @@ public class ShowReceiptsPanel extends JPanel {
                 firstIndex = 0;
             }
         }
-        receiptsInfoPanel.setReceipt(receipts.get().get(firstIndex));
+        receiptsInfoPanel.setReceipt(receipts.orElseGet(ArrayList::new).get(firstIndex));
     }
 
 }

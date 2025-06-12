@@ -22,7 +22,14 @@ public class ShoppingCart {
     }
 
     public void addToCart(Product product){
-        if(product != null){
+
+        if(cartItems.containsKey(product.getId()) &&
+                !(cartItems.get(product.getId()).getQuantity() + 1 >= product.getQuantity()) ){
+            JOptionPane.showMessageDialog(new JOptionPane(), "Δέν υπάρχουν διαθέσημα αποθέματα",product.getName(),JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if(product != null ){
             if (cartItems.containsKey(product.getId())){
                 incrementCartItemQuantity(product.getId());
             }else{

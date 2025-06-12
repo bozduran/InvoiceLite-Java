@@ -208,6 +208,29 @@ public class JpaDataAccess implements DataAccesor {
         return false;
     }
 
+    @Override
+    public boolean updateProductQuantity(String addOrRemove, int id, int quantity) {
+        var transaction = entityManager.getTransaction();
+        String jpql = "UPDATE Product p SET p.quantity = p.quantity+ :extraQuantity WHERE p.id = :id ";
+        if(addOrRemove.equals("+")){
+            jpql = "UPDATE Product p SET p.quantity = p.quantity + :extraQuantity WHERE p.id = :id ";
+        }else if(addOrRemove.equals("-")){
+            jpql = "UPDATE Product p SET p.quantity = p.quantity - :extraQuantity WHERE p.id = :id ";
+        }
+
+        try {
+            transaction.begin();
+            entityManager.
+                    createQuery(jpql).setParameter("id", id)
+                    .setParameter("extraQuantity", quantity)
+                    .executeUpdate();
+            transaction.commit();
+        }catch (Exception e) {
+            System.err.println(e);
+        }
+        return false;
+    }
+
 
 }
 
