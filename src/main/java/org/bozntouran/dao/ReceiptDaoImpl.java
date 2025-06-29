@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.bozntouran.entities.Receipt;
 import org.bozntouran.manager.HibernateUtility;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Optional;
 public class ReceiptDaoImpl implements ReceiptDao {
 
     private static ReceiptDao instance;
+    private SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
 
     private ReceiptDaoImpl() {
 
@@ -31,7 +33,7 @@ public class ReceiptDaoImpl implements ReceiptDao {
 
         Transaction transaction = null;
 
-        try (Session session = HibernateUtility.getSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.persist(receipt);
             transaction.commit();
@@ -52,7 +54,7 @@ public class ReceiptDaoImpl implements ReceiptDao {
     @Override
     public boolean delete(int id) {
         Transaction transaction = null;
-        try (Session session = HibernateUtility.getSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.remove(session.find(Receipt.class, id));
             transaction.commit();
@@ -68,7 +70,7 @@ public class ReceiptDaoImpl implements ReceiptDao {
     @Override
     public Optional<List<Receipt>> getReceipts() {
 
-        try (Session session = HibernateUtility.getSession()) {
+        try (Session session = sessionFactory.openSession()) {
             List<Receipt> result =
                     session.createQuery("SELECT r FROM  Receipt r ", Receipt.class).getResultList();
 
@@ -85,5 +87,10 @@ public class ReceiptDaoImpl implements ReceiptDao {
     @Override
     public Optional<Receipt> getReceipt(int id) {
         return Optional.empty();
+    }
+
+    @Override
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 }

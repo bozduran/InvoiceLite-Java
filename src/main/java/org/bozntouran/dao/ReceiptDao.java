@@ -1,6 +1,7 @@
 package org.bozntouran.dao;
 
 import org.bozntouran.entities.Receipt;
+import org.hibernate.SessionFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,4 +18,5 @@ public interface ReceiptDao {
 
     Optional<Receipt> getReceipt(int id);
 
+    void setSessionFactory(SessionFactory sessionFactory);
 }

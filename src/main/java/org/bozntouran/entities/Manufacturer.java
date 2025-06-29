@@ -2,10 +2,7 @@ package org.bozntouran.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -15,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Table(name = "manufacturer")
 public class Manufacturer {
 

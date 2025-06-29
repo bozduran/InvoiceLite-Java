@@ -27,6 +27,11 @@ The program supports barcode scanning using a scanner that inputs the barcode as
 - **MySQL**
 - Hibernate handles schema generation and data persistence automatically.
 
-## Setup 
+## 📦 Setup & Run
 
-> Requires Java 21+ and Maven MySql installed.
+> Requires Java 21+ and Maven installed.
+
+```bash
+git clone https://github.com/bozduran/InvoiceLite
+cd invoicelite
+mvn clean install

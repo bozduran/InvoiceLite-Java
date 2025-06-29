@@ -1,14 +1,17 @@
 package org.bozntouran.dao;
 
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.bozntouran.entities.Customer;
 import org.bozntouran.manager.HibernateUtility;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 @Log4j2
 public class CustomerDaoImpl implements CustomerDao {
 
+    private SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
 
     private static CustomerDaoImpl instance;
 
@@ -30,7 +33,7 @@ public class CustomerDaoImpl implements CustomerDao {
     public Customer getCustomerByAfm(int afm) {
 
         Customer customer = null;
-        try (Session session = HibernateUtility.getSession()) {
+                try (Session session = sessionFactory.openSession()) {
             String jpql = "SELECT c FROM Customer c WHERE c.afm = :afm";
             customer = session.createSelectionQuery(jpql, Customer.class)
                     .setParameter("afm", afm)
@@ -45,8 +48,9 @@ public class CustomerDaoImpl implements CustomerDao {
 
     @Override
     public boolean save(Customer customer) {
+        
         Transaction transaction = null;
-        try (Session session = HibernateUtility.getSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.persist(customer);
             transaction.commit();
@@ -57,5 +61,10 @@ public class CustomerDaoImpl implements CustomerDao {
             log.error("Failed to obtain session", e);
             return false;
         }
+    }
+
+    @Override
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 }

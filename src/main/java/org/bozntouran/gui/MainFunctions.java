@@ -57,7 +57,7 @@ public class MainFunctions extends JPanel {
 
 
     public void newClient() {
-        contentPanel.addNewCard(new NewClientPanel(), "NewClient");
+        contentPanel.addNewCard(new NewCustomerPanel(), "NewClient");
         contentPanel.showCard("NewClient");
     }
 

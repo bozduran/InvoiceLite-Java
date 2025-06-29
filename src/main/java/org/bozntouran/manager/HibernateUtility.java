@@ -1,5 +1,6 @@
 package org.bozntouran.manager;
 
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.bozntouran.entities.Customer;
 import org.bozntouran.entities.Manufacturer;
@@ -13,7 +14,11 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 @Log4j2
+@Getter
 public class HibernateUtility {
+    public static SessionFactory getSessionFactory(){
+        return sessionFactory;
+    }
 
     private static final SessionFactory sessionFactory = buildSessionFactory();
 

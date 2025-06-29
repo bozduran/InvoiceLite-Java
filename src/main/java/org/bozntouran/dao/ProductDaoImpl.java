@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.bozntouran.entities.Product;
 import org.bozntouran.manager.HibernateUtility;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.Optional;
 public class ProductDaoImpl implements ProductDao {
 
     private static ProductDaoImpl instance;
+    private SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
+
 
     private ProductDaoImpl() {
     }
@@ -33,7 +36,7 @@ public class ProductDaoImpl implements ProductDao {
         Product product = null;
         String jpql = "SELECT p FROM Product p WHERE p.barcode LIKE :barcode";
 
-        try (Session session = HibernateUtility.getSession()) {
+        try (Session session = sessionFactory.openSession()) {
             product = session.createSelectionQuery(jpql, Product.class)
                     .setParameter("barcode", barcode)
                     .getSingleResult();
@@ -49,7 +52,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public boolean save(Product product) {
         Transaction transaction = null;
-        try (Session session = HibernateUtility.getSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.persist(product);
             transaction.commit();
@@ -73,18 +76,17 @@ public class ProductDaoImpl implements ProductDao {
         }
 
         Transaction transaction;
-        try (Session session = HibernateUtility.getSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            session.createQuery(jpql, Product.class)
+            session.createQuery(jpql)
                     .setParameter("id", id)
-                    .setParameter("quantity", quantity)
+                    .setParameter("extraQuantity", quantity)
                     .executeUpdate();
             transaction.commit();
             return true;
         } catch (Exception e) {
             log.error("Failed to obtain session", e);
             return false;
-
         }
 
 
@@ -93,7 +95,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Optional<List<Product>> getProducts() {
 
-        try (Session session = HibernateUtility.getSession()) {
+        try (Session session = sessionFactory.openSession()) {
             List<Product> result =
                     session.createQuery("SELECT p FROM Product p ", Product.class).getResultList();
 
@@ -104,5 +106,10 @@ public class ProductDaoImpl implements ProductDao {
             return Optional.empty();
         }
 
+    }
+
+    @Override
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 }

@@ -8,11 +8,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.math.BigInteger;
 
-public class NewClientPanel extends JPanel {
+public class NewCustomerPanel extends JPanel {
 
     private CustomerDao customerDao;
 
-    public NewClientPanel() {
+    public NewCustomerPanel() {
 
         customerDao = CustomerDaoImpl.getInstance();
 
