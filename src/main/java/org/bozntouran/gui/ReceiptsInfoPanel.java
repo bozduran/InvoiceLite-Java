@@ -1,8 +1,8 @@
 package org.bozntouran.gui;
 
+import org.bozntouran.dao.ReceiptDao;
+import org.bozntouran.dao.ReceiptDaoImpl;
 import org.bozntouran.entities.Receipt;
-import org.bozntouran.manager.DataAccesor;
-import org.bozntouran.manager.JpaDataAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,11 +14,13 @@ public class ReceiptsInfoPanel extends JPanel {
     private JTextField amountTextField;
     private JTextField dateTextField;
     private int id; // will make it later for update
-    private DataAccesor dataAccesor;
+    private ReceiptDao receiptDao;
 
     public ReceiptsInfoPanel() {
-        dataAccesor = JpaDataAccess.getInstance();
-        setLayout(new GridLayout(4,2));
+        setLayout(new GridLayout(4, 2));
+
+        this.receiptDao = ReceiptDaoImpl.getInstance();
+
         add(new JLabel("'Ονομα απόδιξεις"));
         fileNameTextField = new JTextField();
         add(fileNameTextField);
@@ -30,24 +32,23 @@ public class ReceiptsInfoPanel extends JPanel {
         add(dateTextField);
 
 
-
     }
 
-    public void setReceipt(Receipt receipt){
-        id=receipt.getId();
+    public void setReceipt(Receipt receipt) {
+        id = receipt.getId();
         dateTextField.setText(receipt.getDate().toString());
         fileNameTextField.setText(receipt.getFilename());
-        amountTextField.setText(Double.toString(receipt.getPrice()) );
+        amountTextField.setText(Double.toString(receipt.getPrice()));
     }
 
     public void deleteReceipt() {
-        dataAccesor.deleteReceipt(id);
+        receiptDao.delete(id);
         try {
-            File file = new File("receipts_pdf_folder/"+fileNameTextField.getText());
-            if(file.exists()){
+            File file = new File("receipts_pdf_folder/" + fileNameTextField.getText());
+            if (file.exists()) {
                 file.delete();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }

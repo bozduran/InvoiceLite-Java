@@ -1,9 +1,13 @@
 package org.bozntouran.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.bozntouran.entities.Product;
 
 @Data
+@Builder
+@AllArgsConstructor
 public class CartItem {
 
     private int id;
@@ -15,7 +19,7 @@ public class CartItem {
     //quantity of items to be purchased
     private int quantity;
 
-    public CartItem(Product product){
+    public CartItem(Product product) {
         this.id = product.getId();
         this.name = product.getName();
         this.description = product.getDescription();
@@ -24,11 +28,11 @@ public class CartItem {
         this.quantity = 1;
     }
 
-    public void incrementQuantity(){
-        this.quantity = this.quantity+1;
+    public void incrementQuantity() {
+        this.quantity = this.quantity + 1;
     }
 
-    public void decreaseQuantity(){
-        this.quantity = this.quantity-1;
+    public void decreaseQuantity() {
+        this.quantity = this.quantity - 1;
     }
 }

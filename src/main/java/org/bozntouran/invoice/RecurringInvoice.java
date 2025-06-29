@@ -7,15 +7,12 @@ import org.bozntouran.dto.CartItem;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
-public class RecurringInvoice implements Invoice{
+public class RecurringInvoice implements Invoice {
 
     private String filename;
     private HashMap<Integer, CartItem> cartItems;
     private double totalPrice;
     private int totalQuantity;
-
-
-
 
 
     @Override
@@ -34,13 +31,13 @@ public class RecurringInvoice implements Invoice{
     }
 
     @Override
-    public void setCartItems(HashMap<Integer, CartItem> cartItems) {
-
+    public HashMap<Integer, CartItem> getCartItems() {
+        return null;
     }
 
     @Override
-    public HashMap<Integer, CartItem> getCartItems() {
-        return null;
+    public void setCartItems(HashMap<Integer, CartItem> cartItems) {
+
     }
 
     @Override

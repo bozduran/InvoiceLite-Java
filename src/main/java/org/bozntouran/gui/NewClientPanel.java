@@ -1,8 +1,8 @@
 package org.bozntouran.gui;
 
+import org.bozntouran.dao.CustomerDao;
+import org.bozntouran.dao.CustomerDaoImpl;
 import org.bozntouran.entities.Customer;
-import org.bozntouran.manager.DataAccesor;
-import org.bozntouran.manager.JpaDataAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,15 +10,13 @@ import java.math.BigInteger;
 
 public class NewClientPanel extends JPanel {
 
-    private DataAccesor dataAccesor;
-
+    private CustomerDao customerDao;
 
     public NewClientPanel() {
 
-        dataAccesor = JpaDataAccess.getInstance();
+        customerDao = CustomerDaoImpl.getInstance();
 
-
-        setLayout(new GridLayout(5,1,25,25));
+        setLayout(new GridLayout(5, 1, 25, 25));
 
         add(new JLabel("Όνομα"));
         JTextField nameTextField = new JTextField();
@@ -39,7 +37,9 @@ public class NewClientPanel extends JPanel {
         add(clearButton);
 
         JButton submitButton = new JButton("Αποθήκευσε");
-        submitButton.addActionListener(e -> {saveClient(nameTextField,afm,email,phoneNumber);});
+        submitButton.addActionListener(e -> {
+            saveClient(nameTextField, afm, email, phoneNumber);
+        });
         add(submitButton);
 
 
@@ -47,27 +47,27 @@ public class NewClientPanel extends JPanel {
 
     public void saveClient(JTextField nameTextField, JTextField afm, JTextField email, JTextField phoneNumber) {
 
-        if(nameTextField.getText().isEmpty()){
-            JOptionPane.showMessageDialog(this,"Το πεδίο με το όνομα δεν είναι σωστό","Όνομα",JOptionPane.WARNING_MESSAGE);
+        if (nameTextField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Το πεδίο με το όνομα δεν είναι σωστό", "Όνομα", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        if(!checkIfNumeric(afm.getText())){
-            JOptionPane.showMessageDialog(this,"Το πεδίο ΑΦΜ δεν είναι σωστό","ΑΦΜ",JOptionPane.WARNING_MESSAGE);
+        if (!checkIfNumeric(afm.getText())) {
+            JOptionPane.showMessageDialog(this, "Το πεδίο ΑΦΜ δεν είναι σωστό", "ΑΦΜ", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        if(email.getText().isEmpty()){
-            JOptionPane.showMessageDialog(this,"Το πεδίο με το email δεν είναι σωστό","Email",JOptionPane.WARNING_MESSAGE);
+        if (email.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Το πεδίο με το email δεν είναι σωστό", "Email", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        if(!checkIfNumeric(phoneNumber.getText())){
-            JOptionPane.showMessageDialog(this,"Το πεδίο με το τηλέφωνο δεν είναι σωστό","Τηλέφωνο",JOptionPane.WARNING_MESSAGE);
+        if (!checkIfNumeric(phoneNumber.getText())) {
+            JOptionPane.showMessageDialog(this, "Το πεδίο με το τηλέφωνο δεν είναι σωστό", "Τηλέφωνο", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        dataAccesor.addNewCustomer(new Customer(Integer.parseInt(afm.getText())
-                ,nameTextField.getText()
-        ,email.getText()
-        , new BigInteger(phoneNumber.getText()) ));
+        customerDao.save(new Customer(Integer.parseInt(afm.getText())
+                , nameTextField.getText()
+                , email.getText()
+                , new BigInteger(phoneNumber.getText())));
     }
 
     public boolean checkIfNumeric(String value) {

@@ -2,14 +2,18 @@ package org.bozntouran.manager;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.bozntouran.dto.CartItem;
 import org.bozntouran.entities.Product;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Setter
 @Getter
+@Log4j2
 public class ShoppingCart {
 
     private HashMap<Integer, CartItem> cartItems;
@@ -17,33 +21,36 @@ public class ShoppingCart {
     private int totalQuantity;
 
 
-    public ShoppingCart(){
-        cartItems = new HashMap<>(10);
+    public ShoppingCart() {
+        totalPrice = 0;
+        totalQuantity = 0;
+        cartItems = new HashMap<>();
     }
 
-    public void addToCart(Product product){
+    public void addToCart(Product product) {
 
-        if(cartItems.containsKey(product.getId()) &&
-                !(cartItems.get(product.getId()).getQuantity() + 1 >= product.getQuantity()) ){
-            JOptionPane.showMessageDialog(new JOptionPane(), "Δέν υπάρχουν διαθέσημα αποθέματα",product.getName(),JOptionPane.WARNING_MESSAGE);
+        if (cartItems.containsKey(product.getId()) &&
+                !(cartItems.get(product.getId()).getQuantity() + 1 >= product.getQuantity())) {
+            JOptionPane.showMessageDialog(new JOptionPane(),
+                    "Δέν υπάρχουν διαθέσημα αποθέματα",
+                    product.getName(), JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        if(product != null ){
-            if (cartItems.containsKey(product.getId())){
-                incrementCartItemQuantity(product.getId());
-            }else{
-                cartItems.put(product.getId(),new CartItem(product) );
-            }
 
-            calculateTotalPriceAndQuantity();
+        if (cartItems.containsKey(product.getId())) {
+            incrementCartItemQuantity(product.getId());
         } else {
-            System.out.println("Error product is null");
+            cartItems.put(product.getId(), new CartItem(product));
         }
+
+        calculateTotalPriceAndQuantity();
+
 
     }
 
-    private void calculateTotalPriceAndQuantity() {
+    public void calculateTotalPriceAndQuantity() {
+
         totalPrice = 0;
         totalQuantity = 0;
 
@@ -54,16 +61,24 @@ public class ShoppingCart {
 
     }
 
-    public void decrementCartItemQuantity(int productId){
-        if(cartItems.get(productId).getQuantity() == 1){
+    public void decrementCartItemQuantity(int productId) {
+
+        if (!cartItems.containsKey(productId)) {
+            return;
+        }
+
+        if (cartItems.get(productId).getQuantity() == 1) {
             cartItems.remove(productId);
-        }else{
+        } else {
             cartItems.get(productId).decreaseQuantity();
         }
 
     }
 
-    public void incrementCartItemQuantity(int productId){
+    public void incrementCartItemQuantity(int productId) {
+        if (!cartItems.containsKey(productId)) {
+            return;
+        }
         cartItems.get(productId).incrementQuantity();
     }
 
@@ -86,6 +101,9 @@ public class ShoppingCart {
     }
 
     public void removeItem(int productId) {
+        if (!cartItems.containsKey(productId)) {
+            return;
+        }
         cartItems.remove(productId);
     }
 }

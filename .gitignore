@@ -37,3 +37,4 @@ build/
 ### Mac OS ###
 .DS_Store
 /receipts_pdf_folder/**
+/logs/

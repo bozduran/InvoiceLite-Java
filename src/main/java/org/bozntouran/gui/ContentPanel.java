@@ -35,8 +35,8 @@ public class ContentPanel extends JPanel {
         add(cardPanel, BorderLayout.CENTER);
     }
 
-    public void addNewCard(JPanel jPanel,String name){
-        this.cardPanel.add(jPanel,name);
+    public void addNewCard(JPanel jPanel, String name) {
+        this.cardPanel.add(jPanel, name);
     }
 
     public void showCard(String name) {

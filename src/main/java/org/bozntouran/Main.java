@@ -4,8 +4,6 @@ import org.bozntouran.gui.ContentPanel;
 import org.bozntouran.gui.FooterPanel;
 import org.bozntouran.gui.HeaderPanel;
 import org.bozntouran.gui.MainFunctions;
-import org.bozntouran.manager.DataAccesor;
-import org.bozntouran.manager.JpaDataAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,8 +13,7 @@ import java.awt.*;
 public class Main {
 
     public static void main(String[] args) {
-        DataAccesor dataAccesor = JpaDataAccess.getInstance();
-        dataAccesor.intialize();
+
         JFrame frame = new JFrame("Invoice Lite");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 300);

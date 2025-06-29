@@ -1,8 +1,8 @@
 package org.bozntouran.gui;
 
+import org.bozntouran.dao.ReceiptDao;
+import org.bozntouran.dao.ReceiptDaoImpl;
 import org.bozntouran.entities.Receipt;
-import org.bozntouran.manager.DataAccesor;
-import org.bozntouran.manager.JpaDataAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,26 +12,27 @@ import java.util.Optional;
 
 public class ShowReceiptsPanel extends JPanel {
 
-    private DataAccesor dataAccesor;
+    private ReceiptDao receiptDao;
     private JPanel receiptsPanel;
     private ReceiptsInfoPanel receiptsInfoPanel;
     private Optional<List<Receipt>> receipts;
 
-    private JList<Receipt> receiptJList ;
+    private JList<Receipt> receiptJList;
     private JScrollPane listScroller;
 
-    public ShowReceiptsPanel(){
+    public ShowReceiptsPanel() {
+        this.receiptDao = ReceiptDaoImpl.getInstance();
 
-        dataAccesor = JpaDataAccess.getInstance();
-
-        setLayout(new GridLayout(3,1,25,0));
+        setLayout(new GridLayout(3, 1));
 
 
-        receipts = dataAccesor.getReceipts();
+        receipts = receiptDao.getReceipts();
 
-        if(receipts.isPresent()){
+        if (receipts.isPresent()) {
             receiptJList = new JList<>(receipts.get().toArray(new Receipt[0]));
-            receiptJList.addListSelectionListener(e -> { showReceipt(e.getFirstIndex() ); });
+            receiptJList.addListSelectionListener(e -> {
+                showReceipt(e.getFirstIndex());
+            });
             receiptJList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
             receiptJList.setVisibleRowCount(-1);
@@ -46,13 +47,15 @@ public class ShowReceiptsPanel extends JPanel {
         add(receiptsInfoPanel);
 
         JButton deleteButton = new JButton("Σβήσε την απόδιξει");
-        deleteButton.addActionListener(e -> {deleteReceipt(); });
+        deleteButton.addActionListener(e -> {
+            deleteReceipt();
+        });
         add(deleteButton);
 
 
     }
 
-    public void deleteReceipt(){
+    public void deleteReceipt() {
         receiptsInfoPanel.deleteReceipt();
         // if it has data return data or return an empty arraylist
         receiptJList.setListData(receipts.orElseGet(ArrayList::new).toArray(new Receipt[0]));
@@ -60,8 +63,8 @@ public class ShowReceiptsPanel extends JPanel {
     }
 
     private void showReceipt(int firstIndex) {
-        if(receipts.isPresent()){
-            if(receipts.get().size() <= firstIndex){
+        if (receipts.isPresent()) {
+            if (receipts.get().size() <= firstIndex) {
                 firstIndex = 0;
             }
         }

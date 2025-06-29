@@ -6,7 +6,7 @@ public class ReceiptsMenu extends JMenu {
 
     private ContentPanel contentPanel;
 
-    public ReceiptsMenu(ContentPanel contentPanel){
+    public ReceiptsMenu(ContentPanel contentPanel) {
         // get the content panel
         this.contentPanel = contentPanel;
 
@@ -25,7 +25,7 @@ public class ReceiptsMenu extends JMenu {
     }
 
     public void createNewReceiptTab() {
-        contentPanel.addNewCard(new ReceiptsPanel(),"Receipt");
+        contentPanel.addNewCard(new ReceiptsPanel(), "Receipt");
         contentPanel.showCard("Receipt");
     }
 }

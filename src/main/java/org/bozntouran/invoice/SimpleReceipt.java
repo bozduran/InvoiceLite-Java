@@ -1,22 +1,19 @@
 package org.bozntouran.invoice;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-
-import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.bozntouran.dto.CartItem;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
-
+@Log4j2
 public class SimpleReceipt implements Invoice {
 
     private String filename;
@@ -34,31 +31,33 @@ public class SimpleReceipt implements Invoice {
 
         String date = String.valueOf(receiptDate);
 
-        filename = date.replaceAll("[ .:]" ,"-") + ".pdf";
-
+        filename = date.replaceAll("[ .:]", "-") + ".pdf";
+        log.info("Generating receipt file with name: {}", filename);
         PDPage first_page = new PDPage();
 
         PDDocumentInformation information = document.getDocumentInformation();
         addCreatorInformation(information);
 
-        try{
+        try {
             PDPageContentStream contentStream = new PDPageContentStream(document, first_page);
             PDType0Font font = PDType0Font.load(document, new File("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"));
             contentStream.setFont(font, 10);
             addReceiptContent(contentStream);
             contentStream.close();
-        }catch(Exception e){
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
 
 
-
         document.addPage(first_page);
-        try{
-            document.save("receipts_pdf_folder/"+ filename);
+        try {
+            ;
+            document.save("receipts_pdf_folder/" + filename);
+
             document.close();
-        }catch (Exception e){
-            e.printStackTrace();
+            log.info("Receipt successfully generated: {}", filename);
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
 
     }
@@ -77,12 +76,12 @@ public class SimpleReceipt implements Invoice {
 
             receiptHeader(contentStream); // add info for store etc..
 
-            contentStream.newLineAtOffset(0, -45 );
+            contentStream.newLineAtOffset(0, -45);
 
 
             receiptProducts(contentStream); //print product on receipt
 
-            contentStream.newLineAtOffset(380 , -20);
+            contentStream.newLineAtOffset(380, -20);
 
             showPriceAndQuantity(contentStream); // total price and quantity
 
@@ -109,7 +108,6 @@ public class SimpleReceipt implements Invoice {
         float lineHeight = 15; // Space between rows
 
 
-
         contentStream.newLineAtOffset(0, startY); // 0
         contentStream.showText("ID");
         contentStream.newLineAtOffset(50, 0); // 0+50-0=50
@@ -123,7 +121,7 @@ public class SimpleReceipt implements Invoice {
         contentStream.newLine();
         contentStream.newLineAtOffset(-410, startY); // 0
 
-        for (CartItem item : cartItems.values()){
+        for (CartItem item : cartItems.values()) {
 
             contentStream.newLineAtOffset(0, 0);
             contentStream.showText(String.valueOf(item.getId()));
@@ -134,7 +132,7 @@ public class SimpleReceipt implements Invoice {
             contentStream.newLineAtOffset(80, 0);
             contentStream.showText(String.valueOf(item.getPrice()));
             contentStream.newLineAtOffset(80, 0);
-            contentStream.showText(String.valueOf(item.getPrice() * item.getQuantity() ) );
+            contentStream.showText(String.valueOf(item.getPrice() * item.getQuantity()));
             contentStream.newLineAtOffset(-410, -lineHeight);
 
         }
@@ -144,13 +142,13 @@ public class SimpleReceipt implements Invoice {
     }
 
     @Override
-    public void setCartItems(HashMap<Integer, CartItem> cartItems) {
-        this.cartItems = cartItems;
+    public HashMap<Integer, CartItem> getCartItems() {
+        return cartItems;
     }
 
     @Override
-    public HashMap<Integer, CartItem> getCartItems() {
-        return cartItems;
+    public void setCartItems(HashMap<Integer, CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 
     @Override
@@ -181,7 +179,7 @@ public class SimpleReceipt implements Invoice {
     @Override
     public void addCreatorInformation(PDDocumentInformation information) {
         information.setAuthor("Some Author");
-        information.setTitle("Invoice:"+this.filename);
+        information.setTitle("Invoice:" + this.filename);
         information.setCreator("Some Creator");
 
     }

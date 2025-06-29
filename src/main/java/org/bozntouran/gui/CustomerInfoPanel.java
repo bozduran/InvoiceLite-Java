@@ -1,8 +1,8 @@
 package org.bozntouran.gui;
 
+import org.bozntouran.dao.CustomerDao;
+import org.bozntouran.dao.CustomerDaoImpl;
 import org.bozntouran.entities.Customer;
-import org.bozntouran.manager.DataAccesor;
-import org.bozntouran.manager.JpaDataAccess;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -11,18 +11,20 @@ import java.awt.*;
 
 public class CustomerInfoPanel extends JPanel {
 
-    private DataAccesor dataAccesor;
+
     private JTextField nameTextField;
     private JTextField cellPhoneText;
     private JTextField afm;
 
+    private CustomerDao customerDao;
+
     public CustomerInfoPanel() {
         setLayout(new GridLayout(4, 2));
 
-        String[] options = {"Απόδιξει","Τιμολόγιο"};
+        String[] options = {"Απόδιξει", "Τιμολόγιο"};
 
-        dataAccesor = JpaDataAccess.getInstance();
-        dataAccesor.intialize();
+        customerDao = CustomerDaoImpl.getInstance();
+
 
         JComboBox<String> comboBox = new JComboBox<>(options);
         nameTextField = new JTextField();
@@ -32,7 +34,7 @@ public class CustomerInfoPanel extends JPanel {
         afm.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (afm.getText().length() >= 6 ){
+                if (afm.getText().length() >= 6) {
                     retrieveCustomer(Integer.valueOf(afm.getText()));
                 }
             }
@@ -45,7 +47,7 @@ public class CustomerInfoPanel extends JPanel {
             public void changedUpdate(DocumentEvent e) {
 
             }
-        } );
+        });
 
         add(new JLabel("Είδος απόδιξεις"));
         add(comboBox);
@@ -60,12 +62,12 @@ public class CustomerInfoPanel extends JPanel {
     }
 
     private void retrieveCustomer(Integer afmToRetrieve) {
-        Customer customer = dataAccesor.getCustomer(afmToRetrieve);
+        Customer customer = customerDao.getCustomerByAfm(afmToRetrieve);
 
-        if (customer != null){
+        if (customer != null) {
             nameTextField.setText(customer.getName());
             cellPhoneText.setText(String.valueOf(customer.getPhoneNumber()));
-        }else{
+        } else {
             nameTextField.setText("Customer doesnt exist in database");
         }
 

@@ -2,7 +2,10 @@ package org.bozntouran.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -36,9 +39,9 @@ public class Manufacturer {
     @JoinColumn(name = "manufacturer_id")
     private List<Product> products;
 
-    public void addProducts(Product product){
+    public void addProducts(Product product) {
 
-        if (!products.contains(product)){
+        if (!products.contains(product)) {
             product.setManufacturer(this);
             products.add(product);
         }

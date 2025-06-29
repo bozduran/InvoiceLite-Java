@@ -10,18 +10,20 @@ import java.util.HashMap;
 public interface Invoice {
 
     public void createInvoice();
+
     public void addCreatorInformation(PDDocumentInformation information);
+
     public void addReceiptContent(PDPageContentStream contentStream);
 
-
+    public HashMap<Integer, CartItem> getCartItems();
 
     public void setCartItems(HashMap<Integer, CartItem> cartItems);
-    public HashMap<Integer, CartItem>  getCartItems();
 
     void setTotalPrice(double totalPrice);
 
     void setTotalQuantity(int totalQuantity);
 
     String getFilename();
+
     public LocalDateTime getReceiptDate();
 }

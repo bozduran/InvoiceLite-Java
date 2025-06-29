@@ -1,12 +1,14 @@
 package org.bozntouran.gui;
 
+import org.bozntouran.dao.ProductDao;
+import org.bozntouran.dao.ProductDaoImpl;
+import org.bozntouran.dao.ReceiptDao;
+import org.bozntouran.dao.ReceiptDaoImpl;
 import org.bozntouran.dto.CartItem;
 import org.bozntouran.entities.Product;
 import org.bozntouran.entities.Receipt;
 import org.bozntouran.invoice.Invoice;
 import org.bozntouran.invoice.SimpleReceipt;
-import org.bozntouran.manager.DataAccesor;
-import org.bozntouran.manager.JpaDataAccess;
 import org.bozntouran.manager.ShoppingCart;
 
 import javax.swing.*;
@@ -18,26 +20,16 @@ import java.text.DecimalFormat;
 public class ReceiptsPanel extends JPanel implements KeyListener {
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
+    private final Object[] columnNames = {"A/A", "Ονομα Προιοντος", "Περιγραφή", "Ποσό", "Αριθμός προιόντων"};
     private StringBuilder barcodeString;
     private DefaultTableModel shoppingCartTable;
     private JPanel customerInfoPanel;
-    private DataAccesor dataAccesor;
+    private ProductDao productDao;
+    private ReceiptDao receiptDao;
     private ShoppingCart shoppingCart;
     private Invoice invoice;
-
     private JLabel totalPriceJLable;
     private JLabel totalQuantityLable;
-
-    private final Object[] columnNames = {"A/A", "Ονομα Προιοντος","Περιγραφή","Ποσό","Αριθμός προιόντων" };
-
-    public void initialize(){
-        this.barcodeString = new StringBuilder();
-        this.shoppingCart = new ShoppingCart();
-        dataAccesor = JpaDataAccess.getInstance();
-
-
-    }
-
 
     public ReceiptsPanel() {
         initialize();
@@ -64,21 +56,26 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
 
         add(printInvoicePanel);
 
-        addTestData();
 
     }
 
+    public void initialize() {
+        this.barcodeString = new StringBuilder();
+        this.shoppingCart = new ShoppingCart();
+        receiptDao = ReceiptDaoImpl.getInstance();
+        productDao = ProductDaoImpl.getInstance();
+    }
 
-    private JPanel createOrderItemPanel(){
+    private JPanel createOrderItemPanel() {
 
         // show scanned products
-        shoppingCartTable = new DefaultTableModel(null , columnNames);
+        shoppingCartTable = new DefaultTableModel(null, columnNames);
 
         JTable orderItemsJTable = new JTable(shoppingCartTable);
         orderItemsJTable.addKeyListener(this); //regain focus here so scanner can add new products
 
         // jtable and option for cart management
-        JPanel orderItemsPanel = new JPanel(new GridLayout(2,1));
+        JPanel orderItemsPanel = new JPanel(new GridLayout(2, 1));
         orderItemsPanel.add(new JScrollPane(orderItemsJTable));
 
         JPanel orderManagementButtons = createOrderManagementPanel(orderItemsJTable);
@@ -88,12 +85,12 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
     }
 
     private JPanel createOrderManagementPanel(JTable orderItemsJTable) {
-        JPanel orderManagementButtons = new JPanel(new GridLayout(1,3));
-        orderManagementButtons.add(new JButton(new AbstractAction( "-" ) {
+        JPanel orderManagementButtons = new JPanel(new GridLayout(1, 3));
+        orderManagementButtons.add(new JButton(new AbstractAction("-") {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Object selectedObject = shoppingCart.getDataVector()[orderItemsJTable.getSelectedRow()][0];
-                shoppingCart.decrementCartItemQuantity(Integer.parseInt(selectedObject.toString()) );
+                shoppingCart.decrementCartItemQuantity(Integer.parseInt(selectedObject.toString()));
                 refreshShoppingCart();
 
             }
@@ -102,7 +99,7 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Object selectedObject = shoppingCart.getDataVector()[orderItemsJTable.getSelectedRow()][0];
-                shoppingCart.incrementCartItemQuantity(Integer.parseInt(selectedObject.toString()) );
+                shoppingCart.incrementCartItemQuantity(Integer.parseInt(selectedObject.toString()));
                 refreshShoppingCart();
 
 
@@ -112,17 +109,17 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Object selectedObject = shoppingCart.getDataVector()[orderItemsJTable.getSelectedRow()][0];
-                shoppingCart.removeItem(Integer.parseInt(selectedObject.toString()) );
+                shoppingCart.removeItem(Integer.parseInt(selectedObject.toString()));
                 refreshShoppingCart();
 
 
             }
         }));
-        
+
         return orderManagementButtons;
     }
 
-    public JPanel summaryPanel(){
+    public JPanel summaryPanel() {
 
         /// This is used to see the price and quantity add to the bottom
 
@@ -132,16 +129,20 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
         JButton printInvoiceButton = new JButton("Print Invoice");
 
         // print invoice
-        printInvoiceButton.addActionListener(e->printInvoice());
+        printInvoiceButton.addActionListener(e -> {
+            if (!shoppingCart.getCartItems().isEmpty()) {
+                printInvoice();
+            }
+        });
 
-        JPanel printInvoicePanel = new JPanel(new GridLayout(1,3));
+        JPanel printInvoicePanel = new JPanel(new GridLayout(1, 3));
         printInvoicePanel.add(totalPriceJLable);
         printInvoicePanel.add(totalQuantityLable);
         printInvoicePanel.add(printInvoiceButton);
         return printInvoicePanel;
     }
 
-    private void addTestData() {
+/*    private void addTestData() {
         shoppingCart.addToCart(dataAccesor.getProduct("087229758196"));
         shoppingCart.addToCart(dataAccesor.getProduct("454426743190"));
         shoppingCart.addToCart(dataAccesor.getProduct("814177540036"));
@@ -169,24 +170,24 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
         shoppingCart.addToCart(dataAccesor.getProduct("009025109439"));
         refreshShoppingCart();
 
-    }
+    }*/
 
     private void focusByMouseClick() {
         this.addMouseListener(new MouseAdapter() {
-              @Override
-              public void mouseClicked(MouseEvent e) {
-                  if (SwingUtilities.isLeftMouseButton(e)) {
-                      requestFocusInWindow();
-                  } else if (SwingUtilities.isRightMouseButton(e)) {
-                      requestFocusInWindow();
-                  }
-              }
-          });
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    requestFocusInWindow();
+                } else if (SwingUtilities.isRightMouseButton(e)) {
+                    requestFocusInWindow();
+                }
+            }
+        });
     }
 
-    public void refreshShoppingCart(){
+    public void refreshShoppingCart() {
         requestFocusInWindow(true);
-        this.shoppingCartTable.setDataVector(shoppingCart.getDataVector(),columnNames);
+        this.shoppingCartTable.setDataVector(shoppingCart.getDataVector(), columnNames);
     }
 
     @Override
@@ -199,10 +200,10 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyChar() == KeyEvent.VK_ENTER){
+        if (e.getKeyChar() == KeyEvent.VK_ENTER) {
 
-            Product p = dataAccesor.getProduct(this.barcodeString.toString().trim());
-            if (p != null){
+            Product p = productDao.getProductByBarcode(this.barcodeString.toString().trim());
+            if (p != null) {
 
                 shoppingCart.addToCart(p);
                 updatePriceAndQuantity();
@@ -227,30 +228,30 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
         }
     }
 
-    public void updatePriceAndQuantity(){
-        totalPriceJLable.setText("Total price: " + String.valueOf(df.format(shoppingCart.getTotalPrice() )));
+    public void updatePriceAndQuantity() {
+        totalPriceJLable.setText("Total price: " + String.valueOf(df.format(shoppingCart.getTotalPrice())));
         totalQuantityLable.setText("Total quantity: " + String.valueOf(shoppingCart.getTotalQuantity()));
     }
 
-    public void updateQuantityInDataBase(){
+    public void updateQuantityInDataBase() {
         var cartItems = shoppingCart.getCartItems();
 
-        for (CartItem tempCartItem:cartItems.values()){
+        for (CartItem tempCartItem : cartItems.values()) {
             System.out.println(tempCartItem.toString());
-            dataAccesor.updateProductQuantity("-" , tempCartItem.getId(),tempCartItem.getQuantity());
+            productDao.updateProductQuantity("-", tempCartItem.getId(), tempCartItem.getQuantity());
         }
 
     }
 
-    public void printInvoice(){
+    public void printInvoice() {
         updateQuantityInDataBase();
         invoice = new SimpleReceipt();
         invoice.setCartItems(shoppingCart.getCartItems());
-        invoice.setTotalPrice( shoppingCart.getTotalPrice());
+        invoice.setTotalPrice(shoppingCart.getTotalPrice());
         invoice.setTotalQuantity(shoppingCart.getTotalQuantity());
         invoice.createInvoice(); // print the pdf to a pdf file
 
-        dataAccesor.addNewReceipt(new Receipt(shoppingCart.getTotalPrice(),
+        receiptDao.save(new Receipt(shoppingCart.getTotalPrice(),
                 invoice.getReceiptDate(),
                 invoice.getFilename()));
 
