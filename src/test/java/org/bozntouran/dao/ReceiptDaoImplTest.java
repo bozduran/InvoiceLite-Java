@@ -1,7 +1,9 @@
 package org.bozntouran.dao;
 
-import org.bozntouran.entities.Manufacturer;
-import org.bozntouran.entities.Product;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.bozntouran.entities.Receipt;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,7 +13,10 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.time.LocalDateTime;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class ReceiptDaoImplTest {
@@ -19,6 +24,16 @@ class ReceiptDaoImplTest {
     static StandardServiceRegistry registry;
     static SessionFactory sessionFactory;
     ProductDao productDao;
+
+
+    private static Validator validator;
+
+    @BeforeAll
+    public static void setUpValidator() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+    }
+
     @BeforeAll
     static void setup() {
         // Use H2 in-memory DB for testing
@@ -34,6 +49,7 @@ class ReceiptDaoImplTest {
                 .buildMetadata()
                 .buildSessionFactory();
     }
+
     @AfterAll
     static void tearDown() {
         if (sessionFactory != null) sessionFactory.close();
@@ -73,5 +89,81 @@ class ReceiptDaoImplTest {
 
     @Test
     void getReceipt() {
+    }
+
+
+    @Test
+    void chekIfReceiptValid_Valid() {
+        Receipt receipt = Receipt.builder()
+                .price(123.2)
+                .filename("filename.txt")
+                .date(LocalDateTime.now())
+                .build();
+
+        Set<ConstraintViolation<Receipt>> constraintViolations =
+                validator.validate(receipt);
+
+        assertEquals(0, constraintViolations.size());
+
+    }
+
+    @Test
+    void chekIfReceiptValid_NegativePrice() {
+        Receipt receipt = Receipt.builder()
+                .price(-123.2)
+                .filename("filename.txt")
+                .date(LocalDateTime.now())
+                .build();
+
+        Set<ConstraintViolation<Receipt>> constraintViolations =
+                validator.validate(receipt);
+
+        assertEquals(1, constraintViolations.size());
+        assertEquals("must be greater than or equal to 0",constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    void chekIfReceiptValid_BlankFilename() {
+        Receipt receipt = Receipt.builder()
+                .price(123.2)
+                .filename("")
+                .date(LocalDateTime.now())
+                .build();
+
+        Set<ConstraintViolation<Receipt>> constraintViolations =
+                validator.validate(receipt);
+
+        assertEquals(1, constraintViolations.size());
+        assertEquals("must not be blank",constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    void chekIfReceiptValid_NullFilename() {
+        Receipt receipt = Receipt.builder()
+                .price(123.2)
+                .filename(null)
+                .date(LocalDateTime.now())
+                .build();
+
+        Set<ConstraintViolation<Receipt>> constraintViolations =
+                validator.validate(receipt);
+
+        assertEquals(1, constraintViolations.size());
+        assertEquals("must not be blank",constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    void chekIfReceiptValid_FutureDate() {
+        Receipt receipt = Receipt.builder()
+                .price(123.2)
+                .filename("filename.txt")
+                .date(LocalDateTime.of(3123,1,1,1,1))
+                .build();
+
+        Set<ConstraintViolation<Receipt>> constraintViolations =
+                validator.validate(receipt);
+
+        assertEquals(1, constraintViolations.size());
+        assertEquals("must be a date in the past or in the present",constraintViolations.iterator().next().getMessage());
     }
 }

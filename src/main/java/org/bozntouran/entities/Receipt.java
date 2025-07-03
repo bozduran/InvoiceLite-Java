@@ -1,9 +1,7 @@
 package org.bozntouran.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -21,23 +19,25 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor  // πρεπει να υπαρχει παντα
 @Table(name = "receipt")
 public class Receipt {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotBlank
-    @NotEmpty
-    @Positive
+
+    @PositiveOrZero
     private double price;
+
     @NotBlank
-    @NotEmpty
     private String filename;
-    @NotBlank
-    @NotEmpty
+
+    @PastOrPresent
     private LocalDateTime date;
+
     public Receipt(double price, LocalDateTime date, String filename) {
         this.price = price;
         this.date = date;

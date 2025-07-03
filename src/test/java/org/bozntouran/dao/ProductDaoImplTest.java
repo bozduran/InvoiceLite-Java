@@ -1,5 +1,9 @@
 package org.bozntouran.dao;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.bozntouran.entities.Manufacturer;
 import org.bozntouran.entities.Product;
 import org.hibernate.Session;
@@ -11,6 +15,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.junit.jupiter.api.*;
 
 import java.util.Random;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +24,16 @@ class ProductDaoImplTest {
     static StandardServiceRegistry registry;
     static SessionFactory sessionFactory;
     ProductDao productDao;
+
+
+    private static Validator validator;
+
+    @BeforeAll
+    public static void setUpValidator() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+    }
+
     @BeforeAll
     static void setup() {
         // Use H2 in-memory DB for testing
@@ -193,5 +208,112 @@ class ProductDaoImplTest {
         assertEquals(4,productDao.getProducts().get().size());
 
     }
+
+
+
+
+    @Test
+    void checkIfProductValid_Valid(){
+
+        Product product = Product.builder()
+                .barcode(String.valueOf(1234 ))
+                .name("Gaming Mouse")
+                .description("High precision wireless mouse")
+                .price(49.99)
+                .quantity(25)
+                .build();
+
+        Set<ConstraintViolation<Product>> constraintValidators =
+                validator.validate(product);
+
+        assertEquals(0,constraintValidators.size());
+    }
+
+    @Test
+    void checkIfProductValid_NullName(){
+
+        Product product = Product.builder()
+                .barcode(String.valueOf( "234"))
+                .name(null)
+                .description("High precision wireless mouse")
+                .price(49.99)
+                .quantity(25)
+                .build();
+
+        Set<ConstraintViolation<Product>> constraintValidators =
+                validator.validate(product);
+
+        assertEquals(1,constraintValidators.size());
+        assertEquals("must not be blank",
+                constraintValidators.iterator().next().getMessage());
+    }
+
+
+    @Test
+    void checkIfProductValid_BlankBarcode(){
+
+        Product product = Product.builder()
+                .barcode(String.valueOf( ""))
+                .name("Gaming Mouse")
+                .description("High precision wireless mouse")
+                .price(49.99)
+                .quantity(25)
+                .build();
+
+        Set<ConstraintViolation<Product>> constraintValidators =
+                validator.validate(product);
+
+        assertEquals(1,constraintValidators.size());
+        assertEquals("must not be blank",
+                constraintValidators.iterator().next().getMessage());
+
+
+    }
+
+    @Test
+    void checkIfProductValid_NegativePrice(){
+
+        Product product = Product.builder()
+                .barcode(String.valueOf( 123))
+                .name("Gaming Mouse")
+                .description("High precision wireless mouse")
+                .price(-49.99)
+                .quantity(25)
+                .build();
+
+        Set<ConstraintViolation<Product>> constraintValidators =
+                validator.validate(product);
+
+        assertEquals(1,constraintValidators.size());
+        assertEquals("must be greater than 0",
+                constraintValidators.iterator().next().getMessage());
+
+
+    }
+
+    @Test
+    void checkIfProductValid_NegativeQuantity(){
+
+        Product product = Product.builder()
+                .barcode(String.valueOf( 123))
+                .name("Gaming Mouse")
+                .description("High precision wireless mouse")
+                .price(49.99)
+                .quantity(-25)
+                .build();
+
+        Set<ConstraintViolation<Product>> constraintValidators =
+                validator.validate(product);
+
+        assertEquals(1,constraintValidators.size());
+        assertEquals("must be greater than or equal to 0",
+                constraintValidators.iterator().next().getMessage());
+
+
+    }
+
+
+
+
 
 }
