@@ -1,5 +1,10 @@
 package org.bozntouran.gui;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import lombok.extern.log4j.Log4j2;
 import org.bozntouran.dao.ProductDao;
 import org.bozntouran.dao.ProductDaoImpl;
 import org.bozntouran.dao.ReceiptDao;
@@ -9,6 +14,7 @@ import org.bozntouran.entities.Product;
 import org.bozntouran.entities.Receipt;
 import org.bozntouran.invoice.Invoice;
 import org.bozntouran.invoice.SimpleReceipt;
+import org.bozntouran.manager.Language;
 import org.bozntouran.manager.ShoppingCart;
 
 import javax.swing.*;
@@ -16,11 +22,13 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
+import java.util.Set;
 
+@Log4j2
 public class ReceiptsPanel extends JPanel implements KeyListener {
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
-    private final Object[] columnNames = {"A/A", "Ονομα Προιοντος", "Περιγραφή", "Ποσό", "Αριθμός προιόντων"};
+    private final Object[] columnNames;
     private StringBuilder barcodeString;
     private DefaultTableModel shoppingCartTable;
     private JPanel customerInfoPanel;
@@ -33,6 +41,12 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
 
     public ReceiptsPanel() {
         initialize();
+        this.columnNames = new Object[]{Language.getInstance().getMessage("a.a"),
+                Language.getInstance().getMessage("product.name"),
+                Language.getInstance().getMessage("product.description"),
+                Language.getInstance().getMessage("product.price"),
+                Language.getInstance().getMessage("products.quantity.in.cart")
+        };
 
         setLayout(new GridLayout(3, 1));
 
@@ -64,6 +78,7 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
         this.shoppingCart = new ShoppingCart();
         receiptDao = ReceiptDaoImpl.getInstance();
         productDao = ProductDaoImpl.getInstance();
+
     }
 
     private JPanel createOrderItemPanel() {
@@ -105,7 +120,7 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
 
             }
         }));
-        orderManagementButtons.add(new JButton(new AbstractAction("Αφαίρεση προιόντος") {
+        orderManagementButtons.add(new JButton(new AbstractAction(Language.getInstance().getMessage("remove.product.from.cart")) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Object selectedObject = shoppingCart.getDataVector()[orderItemsJTable.getSelectedRow()][0];
@@ -123,10 +138,10 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
 
         /// This is used to see the price and quantity add to the bottom
 
-        totalPriceJLable = new JLabel("Τελική τιμή: " + 0);
-        totalQuantityLable = new JLabel("Συνολικα προιοντα: " + 0);
+        totalPriceJLable = new JLabel(Language.getInstance().getMessage("total.price.with.space") + 0);
+        totalQuantityLable = new JLabel(Language.getInstance().getMessage("total.quantity.with.space") + 0);
 
-        JButton printInvoiceButton = new JButton("Print Invoice");
+        JButton printInvoiceButton = new JButton(Language.getInstance().getMessage("print.receipt"));
 
         // print invoice
         printInvoiceButton.addActionListener(e -> {
@@ -139,38 +154,9 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
         printInvoicePanel.add(totalPriceJLable);
         printInvoicePanel.add(totalQuantityLable);
         printInvoicePanel.add(printInvoiceButton);
+
         return printInvoicePanel;
     }
-
-/*    private void addTestData() {
-        shoppingCart.addToCart(dataAccesor.getProduct("087229758196"));
-        shoppingCart.addToCart(dataAccesor.getProduct("454426743190"));
-        shoppingCart.addToCart(dataAccesor.getProduct("814177540036"));
-        shoppingCart.addToCart(dataAccesor.getProduct("445637750351"));
-        shoppingCart.addToCart(dataAccesor.getProduct("805688256537"));
-        shoppingCart.addToCart(dataAccesor.getProduct("624338181415"));
-        shoppingCart.addToCart(dataAccesor.getProduct("094698177204"));
-        shoppingCart.addToCart(dataAccesor.getProduct("677357207482"));
-        shoppingCart.addToCart(dataAccesor.getProduct("961002799090"));
-        shoppingCart.addToCart(dataAccesor.getProduct("229884239035"));
-        shoppingCart.addToCart(dataAccesor.getProduct("769187181570"));
-        shoppingCart.addToCart(dataAccesor.getProduct("087229758196"));
-
-        shoppingCart.addToCart(dataAccesor.getProduct("752349453457"));
-        shoppingCart.addToCart(dataAccesor.getProduct("950289558177"));
-        shoppingCart.addToCart(dataAccesor.getProduct("815570758405"));
-        shoppingCart.addToCart(dataAccesor.getProduct("223013462770"));
-        shoppingCart.addToCart(dataAccesor.getProduct("201408554191"));
-        shoppingCart.addToCart(dataAccesor.getProduct("250331593724"));
-        shoppingCart.addToCart(dataAccesor.getProduct("986502051845"));
-        shoppingCart.addToCart(dataAccesor.getProduct("091376362653"));
-        shoppingCart.addToCart(dataAccesor.getProduct("279323822968"));
-        shoppingCart.addToCart(dataAccesor.getProduct("444751927349"));
-        shoppingCart.addToCart(dataAccesor.getProduct("156845626263"));
-        shoppingCart.addToCart(dataAccesor.getProduct("009025109439"));
-        refreshShoppingCart();
-
-    }*/
 
     private void focusByMouseClick() {
         this.addMouseListener(new MouseAdapter() {
@@ -229,8 +215,8 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
     }
 
     public void updatePriceAndQuantity() {
-        totalPriceJLable.setText("Total price: " + String.valueOf(df.format(shoppingCart.getTotalPrice())));
-        totalQuantityLable.setText("Total quantity: " + String.valueOf(shoppingCart.getTotalQuantity()));
+        totalPriceJLable.setText(Language.getInstance().getMessage("total.price.with.space") + String.valueOf(df.format(shoppingCart.getTotalPrice())));
+        totalQuantityLable.setText(Language.getInstance().getMessage("total.quantity.with.space") + String.valueOf(shoppingCart.getTotalQuantity()));
     }
 
     public void updateQuantityInDataBase() {
@@ -251,10 +237,36 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
         invoice.setTotalQuantity(shoppingCart.getTotalQuantity());
         invoice.createInvoice(); // print the pdf to a pdf file
 
-        receiptDao.save(new Receipt(shoppingCart.getTotalPrice(),
+        Receipt receipt = new Receipt(shoppingCart.getTotalPrice(),
                 invoice.getReceiptDate(),
-                invoice.getFilename()));
+                invoice.getFilename());
 
+
+        if(!validateReceipt(receipt)){
+            return;
+        }
+
+        boolean result = receiptDao.save(receipt);
+        if (result){
+            log.info("receipt saved successfully");
+        }
+
+    }
+
+    public boolean validateReceipt(Receipt receipt){
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        Set<ConstraintViolation<Receipt>> constraintViolations = validator.validate(receipt);
+
+        if (constraintViolations.isEmpty()){
+            return true;
+        }else{
+            StringBuilder stringBuilder = new StringBuilder(constraintViolations.stream().map(ConstraintViolation::getMessage).toString());
+            JOptionPane.showMessageDialog(this, stringBuilder, "Constraints violation", JOptionPane.WARNING_MESSAGE);
+        }
+
+        return false;
     }
 
     @Override

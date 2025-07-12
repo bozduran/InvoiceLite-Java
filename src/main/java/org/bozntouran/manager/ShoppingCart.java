@@ -32,7 +32,7 @@ public class ShoppingCart {
         if (cartItems.containsKey(product.getId()) &&
                 !(cartItems.get(product.getId()).getQuantity() + 1 >= product.getQuantity())) {
             JOptionPane.showMessageDialog(new JOptionPane(),
-                    "Δέν υπάρχουν διαθέσημα αποθέματα",
+                    Language.getInstance().getMessage("no.available.products"),
                     product.getName(), JOptionPane.WARNING_MESSAGE);
             return;
         }

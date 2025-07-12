@@ -3,6 +3,7 @@ package org.bozntouran.gui;
 import org.bozntouran.dao.CustomerDao;
 import org.bozntouran.dao.CustomerDaoImpl;
 import org.bozntouran.entities.Customer;
+import org.bozntouran.manager.Language;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,23 +13,23 @@ public class NewCustomerPanel extends JPanel {
 
     private CustomerDao customerDao;
 
-    public NewCustomerPanel() {
 
+    public NewCustomerPanel() {
         customerDao = CustomerDaoImpl.getInstance();
 
         setLayout(new GridLayout(5, 1, 25, 25));
 
-        add(new JLabel("Όνομα"));
+        add(new JLabel(Language.getInstance().getMessage("name")));
         JTextField nameTextField = new JTextField();
         add(nameTextField);
 
-        add(new JLabel("ΑΦΜ"));
+        add(new JLabel(Language.getInstance().getMessage("tax.identification.number")));
         JTextField afm = new JTextField();
         add(afm);
-        add(new JLabel("email"));
+        add(new JLabel(Language.getInstance().getMessage("email")));
         JTextField email = new JTextField();
         add(email);
-        add(new JLabel("Τηλέφωνο"));
+        add(new JLabel(Language.getInstance().getMessage("phone.number")));
 
         JTextField phoneNumber = new JTextField();
         add(phoneNumber);
@@ -36,7 +37,7 @@ public class NewCustomerPanel extends JPanel {
         JButton clearButton = new JButton("Καθάρισε τα παιδοία");
         add(clearButton);
 
-        JButton submitButton = new JButton("Αποθήκευσε");
+        JButton submitButton = new JButton(Language.getInstance().getMessage("save"));
         submitButton.addActionListener(e -> {
             saveClient(nameTextField, afm, email, phoneNumber);
         });

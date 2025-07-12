@@ -9,15 +9,15 @@ import java.util.HashMap;
 
 public interface Invoice {
 
-    public void createInvoice();
+    void createInvoice();
 
-    public void addCreatorInformation(PDDocumentInformation information);
+    void addCreatorInformation(PDDocumentInformation information);
 
-    public void addReceiptContent(PDPageContentStream contentStream);
+    void addReceiptContent(PDPageContentStream contentStream);
 
-    public HashMap<Integer, CartItem> getCartItems();
+    HashMap<Integer, CartItem> getCartItems();
 
-    public void setCartItems(HashMap<Integer, CartItem> cartItems);
+    void setCartItems(HashMap<Integer, CartItem> cartItems);
 
     void setTotalPrice(double totalPrice);
 
@@ -25,5 +25,5 @@ public interface Invoice {
 
     String getFilename();
 
-    public LocalDateTime getReceiptDate();
+    LocalDateTime getReceiptDate();
 }

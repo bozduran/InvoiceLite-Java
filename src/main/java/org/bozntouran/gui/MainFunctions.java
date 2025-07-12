@@ -2,6 +2,7 @@ package org.bozntouran.gui;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bozntouran.manager.Language;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,26 +15,25 @@ public class MainFunctions extends JPanel {
     private ContentPanel contentPanel;
 
     public MainFunctions(HeaderPanel headerPanel, ContentPanel contentPanel) {
-
         this.contentPanel = contentPanel;
 
         setLayout(new GridLayout(5, 1));
-        JButton newReceipt = new JButton("Καινούρια απόδιξει");
+        JButton newReceipt = new JButton(Language.getInstance().getMessage("new.receipt"));//"Καινούρια απόδιξει"
         newReceipt.addActionListener(e -> newReceipt());
         this.add(newReceipt);
 
-        JButton newCustomer = new JButton("Καινούριος πελάτης");
+        JButton newCustomer = new JButton(Language.getInstance().getMessage("new.client"));
         newCustomer.addActionListener(e -> newClient());
         this.add(newCustomer);
 
-        JButton receipts = new JButton("Αποδίξεις");
+        JButton receipts = new JButton(Language.getInstance().getMessage("receipts"));
         receipts.addActionListener(e -> showAllReceipts());
         this.add(receipts);
 
-        JButton addProducts = new JButton("Πρόθεσε νέο προιόν");
+        JButton addProducts = new JButton(Language.getInstance().getMessage("add.new.product"));
         addProducts.addActionListener(e -> addNewPoduct());
         this.add(addProducts);
-        JButton manageProducts = new JButton("Διαχήρηση προιοντον");
+        JButton manageProducts = new JButton(Language.getInstance().getMessage("manage.products"));
         manageProducts.addActionListener(e -> manageProducts());
         this.add(manageProducts);
 

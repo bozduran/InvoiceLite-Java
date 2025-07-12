@@ -3,6 +3,7 @@ package org.bozntouran.gui;
 import org.bozntouran.dao.ManufacturerDao;
 import org.bozntouran.dao.ManufacturerDaoImpl;
 import org.bozntouran.entities.Manufacturer;
+import org.bozntouran.manager.Language;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -12,9 +13,10 @@ public class ProductInfoPanel extends JPanel {
     private ManufacturerDao manufacturerDao;
 
     public ProductInfoPanel() {
-        add(new JLabel("'Ονομα:"));
-        add(new JLabel("Περιγραφή:"));
-        add(new JLabel("Κατασκευαστής:"));
+
+        add(new JLabel(Language.getInstance().getMessage("product.name")));
+        add(new JLabel(Language.getInstance().getMessage("product.description")));
+        add(new JLabel(Language.getInstance().getMessage("product.manufacturer")));
 
         manufacturerDao = ManufacturerDaoImpl.getInstance();
 
@@ -25,8 +27,8 @@ public class ProductInfoPanel extends JPanel {
                 .toArray(String[]::new);
         JComboBox<String> manufacturerComboBox = new JComboBox<>(manufacturerNames);
         add(manufacturerComboBox);
-        add(new JLabel("Barcode:"));
-        add(new JLabel("Τιμή:"));
-        add(new JLabel("Ποσότητα:"));
+        add(new JLabel(Language.getInstance().getMessage("product.barcode")));
+        add(new JLabel(Language.getInstance().getMessage("product.price")));
+        add(new JLabel(Language.getInstance().getMessage("product.quantity")));
     }
 }

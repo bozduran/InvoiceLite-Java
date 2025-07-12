@@ -3,6 +3,7 @@ package org.bozntouran.gui;
 import org.bozntouran.dao.CustomerDao;
 import org.bozntouran.dao.CustomerDaoImpl;
 import org.bozntouran.entities.Customer;
+import org.bozntouran.manager.Language;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -17,11 +18,10 @@ public class CustomerInfoPanel extends JPanel {
     private JTextField afm;
 
     private CustomerDao customerDao;
-
     public CustomerInfoPanel() {
         setLayout(new GridLayout(4, 2));
-
-        String[] options = {"Απόδιξει", "Τιμολόγιο"};
+        String[] options = {Language.getInstance().getMessage("receipt"),
+                Language.getInstance().getMessage("invoice")};
 
         customerDao = CustomerDaoImpl.getInstance();
 
@@ -49,13 +49,13 @@ public class CustomerInfoPanel extends JPanel {
             }
         });
 
-        add(new JLabel("Είδος απόδιξεις"));
+        add(new JLabel(Language.getInstance().getMessage("receipt.kind")));
         add(comboBox);
-        add(new JLabel("Όνομα"));
+        add(new JLabel(Language.getInstance().getMessage("name")));
         add(nameTextField);
-        add(new JLabel("Τηλέφωνο"));
+        add(new JLabel(Language.getInstance().getMessage("phone.number")));
         add(cellPhoneText);
-        add(new JLabel("ΑΦΜ"));
+        add(new JLabel(Language.getInstance().getMessage("tax.identification.number")));
 
 
         add(afm);
@@ -68,7 +68,7 @@ public class CustomerInfoPanel extends JPanel {
             nameTextField.setText(customer.getName());
             cellPhoneText.setText(String.valueOf(customer.getPhoneNumber()));
         } else {
-            nameTextField.setText("Customer doesnt exist in database");
+            nameTextField.setText(Language.getInstance().getMessage("customer.dont.exist "));
         }
 
     }

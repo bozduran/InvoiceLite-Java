@@ -3,6 +3,7 @@ package org.bozntouran.gui;
 import org.bozntouran.dao.ReceiptDao;
 import org.bozntouran.dao.ReceiptDaoImpl;
 import org.bozntouran.entities.Receipt;
+import org.bozntouran.manager.Language;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 public class ShowReceiptsPanel extends JPanel {
 
-    private ReceiptDao receiptDao;
+    private final ReceiptDao receiptDao;
     private JPanel receiptsPanel;
     private ReceiptsInfoPanel receiptsInfoPanel;
     private Optional<List<Receipt>> receipts;
@@ -22,7 +23,6 @@ public class ShowReceiptsPanel extends JPanel {
 
     public ShowReceiptsPanel() {
         this.receiptDao = ReceiptDaoImpl.getInstance();
-
         setLayout(new GridLayout(3, 1));
 
 
@@ -46,7 +46,7 @@ public class ShowReceiptsPanel extends JPanel {
 
         add(receiptsInfoPanel);
 
-        JButton deleteButton = new JButton("Σβήσε την απόδιξει");
+        JButton deleteButton = new JButton(Language.getInstance().getMessage("delete.receipt"));
         deleteButton.addActionListener(e -> {
             deleteReceipt();
         });

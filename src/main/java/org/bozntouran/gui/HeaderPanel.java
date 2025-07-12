@@ -1,5 +1,7 @@
 package org.bozntouran.gui;
 
+import org.bozntouran.manager.Language;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -15,7 +17,7 @@ public class HeaderPanel extends JPanel {
         this.contentPanel = contentPanel;
 
         JMenuBar menuBar = new JMenuBar();
-        JMenu editMenu = new JMenu("Βοηθεια");
+        JMenu editMenu = new JMenu(Language.getInstance().getMessage("help"));
 
         JMenuItem exitMenuItem = exitMenuItem();
 
@@ -35,14 +37,14 @@ public class HeaderPanel extends JPanel {
 
 
     public JMenuItem exitMenuItem() {
-        JMenuItem exitMenuItem = new JMenuItem("Έξοδος");
+        JMenuItem exitMenuItem = new JMenuItem(Language.getInstance().getMessage("exit"));
         exitMenuItem.addActionListener(e -> System.exit(1));
 
         return exitMenuItem;
     }
 
     public JMenuItem backToMainWindowMenuItem() {
-        JMenuItem backToMainWindowMenuItem = new JMenuItem("Πίσω στην αρχική");
+        JMenuItem backToMainWindowMenuItem = new JMenuItem(Language.getInstance().getMessage("back.to.main"));
 
         backToMainWindowMenuItem.addActionListener(e -> {
             contentPanel.showCard("Main");

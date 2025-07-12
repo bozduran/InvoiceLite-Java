@@ -3,6 +3,7 @@ package org.bozntouran.gui;
 import org.bozntouran.dao.ReceiptDao;
 import org.bozntouran.dao.ReceiptDaoImpl;
 import org.bozntouran.entities.Receipt;
+import org.bozntouran.manager.Language;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,16 +19,15 @@ public class ReceiptsInfoPanel extends JPanel {
 
     public ReceiptsInfoPanel() {
         setLayout(new GridLayout(4, 2));
-
         this.receiptDao = ReceiptDaoImpl.getInstance();
 
-        add(new JLabel("'Ονομα απόδιξεις"));
+        add(new JLabel(Language.getInstance().getMessage("receipt.name")));
         fileNameTextField = new JTextField();
         add(fileNameTextField);
-        add(new JLabel("Συνολικό ποσό"));
+        add(new JLabel(Language.getInstance().getMessage("total.price")));
         amountTextField = new JTextField();
         add(amountTextField);
-        add(new JLabel("Ημερομηνία έκδοσής"));
+        add(new JLabel(Language.getInstance().getMessage("receipt.date")));
         dateTextField = new JTextField();
         add(dateTextField);
 

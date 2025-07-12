@@ -21,6 +21,7 @@ The program supports barcode scanning using a scanner that inputs the barcode as
 - Lombok
 - Log4j2 (for logging)
 - JUnit 5
+- Added multiple languages support Greek,English,German
 
 ## Database
 
@@ -31,7 +32,4 @@ The program supports barcode scanning using a scanner that inputs the barcode as
 
 > Requires Java 21+ and Maven installed.
 
-```bash
-git clone https://github.com/bozduran/InvoiceLite
-cd invoicelite
-mvn clean install
+
