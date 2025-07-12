@@ -15,7 +15,7 @@ public class NewCustomerPanel extends JPanel {
 
 
     public NewCustomerPanel() {
-        customerDao = CustomerDaoImpl.getInstance();
+        this.customerDao = CustomerDaoImpl.getInstance();
 
         setLayout(new GridLayout(5, 1, 25, 25));
 
@@ -65,7 +65,7 @@ public class NewCustomerPanel extends JPanel {
             return;
         }
 
-        customerDao.save(new Customer(Integer.parseInt(afm.getText())
+        this.customerDao.save(new Customer(Integer.parseInt(afm.getText())
                 , nameTextField.getText()
                 , email.getText()
                 , new BigInteger(phoneNumber.getText())));

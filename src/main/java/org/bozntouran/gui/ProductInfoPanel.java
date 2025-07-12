@@ -18,9 +18,9 @@ public class ProductInfoPanel extends JPanel {
         add(new JLabel(Language.getInstance().getMessage("product.description")));
         add(new JLabel(Language.getInstance().getMessage("product.manufacturer")));
 
-        manufacturerDao = ManufacturerDaoImpl.getInstance();
+        this.manufacturerDao = ManufacturerDaoImpl.getInstance();
 
-        String[] manufacturerNames = manufacturerDao.getManufacturers()
+        String[] manufacturerNames = this.manufacturerDao.getManufacturers()
                 .orElseGet(ArrayList<Manufacturer>::new)
                 .stream()
                 .map(Manufacturer::getName)

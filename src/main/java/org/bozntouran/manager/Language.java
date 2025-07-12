@@ -15,11 +15,11 @@ import java.util.ResourceBundle;
 @Setter
 public class Language {
 
-    private static Language instance;
-    private ResourceBundle bundle = null;
+    private static Language       instance;
+    private        ResourceBundle bundle = null;
 
-    private Language(){
-        String appConfigPath ="src/main/resources/app.properties";
+    private Language() {
+        String appConfigPath = "src/main/resources/app.properties";
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream(appConfigPath));
@@ -33,7 +33,7 @@ public class Language {
     }
 
     public static Language getInstance() {
-        if (instance == null){
+        if (instance == null) {
             instance = new Language();
         }
 
@@ -41,20 +41,20 @@ public class Language {
     }
 
     private void initResourceBundle(Locale locale) {
-        bundle = ResourceBundle.getBundle("Messages",locale);
+        this.bundle = ResourceBundle.getBundle("Messages", locale);
     }
 
-    public void updateSelectedLanguage(Locale locale){
+    public void updateSelectedLanguage(Locale locale) {
 
         initResourceBundle(locale);
 
     }
 
-    public String getMessage(String selectedMessage){
+    public String getMessage(String selectedMessage) {
 
         String returnValue = "";
         try {
-            returnValue = bundle.getString(selectedMessage);
+            returnValue = this.bundle.getString(selectedMessage);
 
         } catch (Exception e) {
             returnValue = "No available translation for key: " + selectedMessage;

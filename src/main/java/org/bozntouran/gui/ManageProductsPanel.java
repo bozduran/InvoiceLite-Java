@@ -17,7 +17,7 @@ public class ManageProductsPanel extends JPanel {
     public ManageProductsPanel() {
         setLayout(new GridLayout(2, 1));
         // get products data
-        productDao = ProductDaoImpl.getInstance();
+        this.productDao = ProductDaoImpl.getInstance();
         JList<Product> productList = new JList<>(getProducts().toArray(new Product[0]));
         // add jllist
         // add jscroll pane
@@ -31,7 +31,7 @@ public class ManageProductsPanel extends JPanel {
 
     private List<Product> getProducts() {
 
-        return productDao.getProducts().orElseGet(ArrayList<Product>::new);
+        return this.productDao.getProducts().orElseGet(ArrayList<Product>::new);
 
     }
 }

@@ -16,23 +16,23 @@ import java.util.HashMap;
 @Log4j2
 public class SimpleReceipt implements Invoice {
 
-    private String filename;
+    private String                     filename;
     private HashMap<Integer, CartItem> cartItems;
-    private double totalPrice;
-    private int totalQuantity;
-    private LocalDateTime receiptDate;
+    private double                     totalPrice;
+    private int                        totalQuantity;
+    private LocalDateTime              receiptDate;
 
 
     @Override
     public void createInvoice() {
         PDDocument document = new PDDocument();
 
-        receiptDate = LocalDateTime.now();
+        this.receiptDate = LocalDateTime.now();
 
-        String date = String.valueOf(receiptDate);
+        String date = String.valueOf(this.receiptDate);
 
-        filename = date.replaceAll("[ .:]", "-") + ".pdf";
-        log.info("Generating receipt file with name: {}", filename);
+        this.filename = date.replaceAll("[ .:]", "-") + ".pdf";
+        log.info("Generating receipt file with name: {}", this.filename);
         PDPage first_page = new PDPage();
 
         PDDocumentInformation information = document.getDocumentInformation();
@@ -52,10 +52,10 @@ public class SimpleReceipt implements Invoice {
         document.addPage(first_page);
         try {
             ;
-            document.save("receipts_pdf_folder/" + filename);
+            document.save("receipts_pdf_folder/" + this.filename);
 
             document.close();
-            log.info("Receipt successfully generated: {}", filename);
+            log.info("Receipt successfully generated: {}", this.filename);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -97,9 +97,9 @@ public class SimpleReceipt implements Invoice {
 
     private void showPriceAndQuantity(PDPageContentStream contentStream) throws IOException {
         contentStream.newLine();
-        contentStream.showText("Total price:" + totalPrice);
+        contentStream.showText("Total price:" + this.totalPrice);
         contentStream.newLine();
-        contentStream.showText("Total quantity:" + totalQuantity);
+        contentStream.showText("Total quantity:" + this.totalQuantity);
     }
 
     private void receiptProducts(PDPageContentStream contentStream) throws IOException {
@@ -121,7 +121,7 @@ public class SimpleReceipt implements Invoice {
         contentStream.newLine();
         contentStream.newLineAtOffset(-410, startY); // 0
 
-        for (CartItem item : cartItems.values()) {
+        for (CartItem item : this.cartItems.values()) {
 
             contentStream.newLineAtOffset(0, 0);
             contentStream.showText(String.valueOf(item.getId()));
@@ -143,7 +143,7 @@ public class SimpleReceipt implements Invoice {
 
     @Override
     public HashMap<Integer, CartItem> getCartItems() {
-        return cartItems;
+        return this.cartItems;
     }
 
     @Override
@@ -186,6 +186,6 @@ public class SimpleReceipt implements Invoice {
 
     @Override
     public LocalDateTime getReceiptDate() {
-        return receiptDate;
+        return this.receiptDate;
     }
 }

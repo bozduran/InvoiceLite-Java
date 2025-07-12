@@ -28,8 +28,8 @@ public class HeaderPanel extends JPanel {
 
         editMenu.add(backToMainWindowMenuItem);
 
-        receiptsMenu = new ReceiptsMenu(contentPanel);
-        menuBar.add(receiptsMenu);
+        this.receiptsMenu = new ReceiptsMenu(contentPanel);
+        menuBar.add(this.receiptsMenu);
         menuBar.add(editMenu);
         add(menuBar);
 
@@ -47,24 +47,24 @@ public class HeaderPanel extends JPanel {
         JMenuItem backToMainWindowMenuItem = new JMenuItem(Language.getInstance().getMessage("back.to.main"));
 
         backToMainWindowMenuItem.addActionListener(e -> {
-            contentPanel.showCard("Main");
+            this.contentPanel.showCard("Main");
         });
         return backToMainWindowMenuItem;
     }
 
     public void showAllReceipts() {
-        contentPanel.addNewCard(new ShowReceiptsPanel(), "ShowReceipts");
-        contentPanel.showCard("ShowReceipts");
+        this.contentPanel.addNewCard(new ShowReceiptsPanel(), "ShowReceipts");
+        this.contentPanel.showCard("ShowReceipts");
     }
 
     public void newReceipt() {
-        contentPanel.addNewCard(new ReceiptsPanel(), "Receipt");
-        contentPanel.showCard("Receipt");
+        this.contentPanel.addNewCard(new ReceiptsPanel(), "Receipt");
+        this.contentPanel.showCard("Receipt");
     }
 
 
     public void newClient() {
-        contentPanel.addNewCard(new NewCustomerPanel(), "NewClient");
-        contentPanel.showCard("NewClient");
+        this.contentPanel.addNewCard(new NewCustomerPanel(), "NewClient");
+        this.contentPanel.showCard("NewClient");
     }
 }

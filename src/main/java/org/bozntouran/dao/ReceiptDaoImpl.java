@@ -14,8 +14,8 @@ import java.util.Optional;
 @Log4j2
 public class ReceiptDaoImpl implements ReceiptDao {
 
-    private static ReceiptDao instance;
-    private SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
+    private static ReceiptDao     instance;
+    private        SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
 
     private ReceiptDaoImpl() {
 

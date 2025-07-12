@@ -18,20 +18,21 @@ public class CustomerInfoPanel extends JPanel {
     private JTextField afm;
 
     private CustomerDao customerDao;
+
     public CustomerInfoPanel() {
         setLayout(new GridLayout(4, 2));
         String[] options = {Language.getInstance().getMessage("receipt"),
                 Language.getInstance().getMessage("invoice")};
 
-        customerDao = CustomerDaoImpl.getInstance();
+        this.customerDao = CustomerDaoImpl.getInstance();
 
 
         JComboBox<String> comboBox = new JComboBox<>(options);
-        nameTextField = new JTextField();
-        cellPhoneText = new JTextField();
-        afm = new JTextField();
+        this.nameTextField = new JTextField();
+        this.cellPhoneText = new JTextField();
+        this.afm = new JTextField();
 
-        afm.getDocument().addDocumentListener(new DocumentListener() {
+        this.afm.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 if (afm.getText().length() >= 6) {
@@ -52,9 +53,9 @@ public class CustomerInfoPanel extends JPanel {
         add(new JLabel(Language.getInstance().getMessage("receipt.kind")));
         add(comboBox);
         add(new JLabel(Language.getInstance().getMessage("name")));
-        add(nameTextField);
+        add(this.nameTextField);
         add(new JLabel(Language.getInstance().getMessage("phone.number")));
-        add(cellPhoneText);
+        add(this.cellPhoneText);
         add(new JLabel(Language.getInstance().getMessage("tax.identification.number")));
 
 
@@ -62,13 +63,13 @@ public class CustomerInfoPanel extends JPanel {
     }
 
     private void retrieveCustomer(Integer afmToRetrieve) {
-        Customer customer = customerDao.getCustomerByAfm(afmToRetrieve);
+        Customer customer = this.customerDao.getCustomerByAfm(afmToRetrieve);
 
         if (customer != null) {
-            nameTextField.setText(customer.getName());
-            cellPhoneText.setText(String.valueOf(customer.getPhoneNumber()));
+            this.nameTextField.setText(customer.getName());
+            this.cellPhoneText.setText(String.valueOf(customer.getPhoneNumber()));
         } else {
-            nameTextField.setText(Language.getInstance().getMessage("customer.dont.exist "));
+            this.nameTextField.setText(Language.getInstance().getMessage("customer.dont.exist "));
         }
 
     }

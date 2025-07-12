@@ -11,7 +11,7 @@ import java.awt.*;
 @Getter
 public class MainFunctions extends JPanel {
 
-    private HeaderPanel headerPanel;
+    private HeaderPanel  headerPanel;
     private ContentPanel contentPanel;
 
     public MainFunctions(HeaderPanel headerPanel, ContentPanel contentPanel) {
@@ -41,24 +41,24 @@ public class MainFunctions extends JPanel {
     }
 
     private void manageProducts() {
-        contentPanel.addNewCard(new ManageProductsPanel(), "ManageProducts");
-        contentPanel.showCard("ManageProducts");
+        this.contentPanel.addNewCard(new ManageProductsPanel(), "ManageProducts");
+        this.contentPanel.showCard("ManageProducts");
     }
 
     public void showAllReceipts() {
-        contentPanel.addNewCard(new ShowReceiptsPanel(), "ShowReceipts");
-        contentPanel.showCard("ShowReceipts");
+        this.contentPanel.addNewCard(new ShowReceiptsPanel(), "ShowReceipts");
+        this.contentPanel.showCard("ShowReceipts");
     }
 
     public void newReceipt() {
-        contentPanel.addNewCard(new ReceiptsPanel(), "Receipt");
-        contentPanel.showCard("Receipt");
+        this.contentPanel.addNewCard(new ReceiptsPanel(), "Receipt");
+        this.contentPanel.showCard("Receipt");
     }
 
 
     public void newClient() {
-        contentPanel.addNewCard(new NewCustomerPanel(), "NewClient");
-        contentPanel.showCard("NewClient");
+        this.contentPanel.addNewCard(new NewCustomerPanel(), "NewClient");
+        this.contentPanel.showCard("NewClient");
     }
 
     private void addNewPoduct() {

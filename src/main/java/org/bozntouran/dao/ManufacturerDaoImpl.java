@@ -16,7 +16,7 @@ import java.util.Optional;
 public class ManufacturerDaoImpl implements ManufacturerDao {
 
     private static ManufacturerDaoImpl instance;
-    private SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
+    private        SessionFactory      sessionFactory = HibernateUtility.getSessionFactory();
 
 
     private ManufacturerDaoImpl() {
@@ -52,7 +52,7 @@ public class ManufacturerDaoImpl implements ManufacturerDao {
     }
 
     @Override
-    public boolean save(Manufacturer manufacturer){
+    public boolean save(Manufacturer manufacturer) {
 
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {

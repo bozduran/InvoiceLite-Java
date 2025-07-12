@@ -16,11 +16,12 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 @Log4j2
 @Getter
 public class HibernateUtility {
-    public static SessionFactory getSessionFactory(){
-        return sessionFactory;
-    }
 
     private static final SessionFactory sessionFactory = buildSessionFactory();
+
+    public static SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
 
     private static SessionFactory buildSessionFactory() {
         log.info("Create SessionFactory");

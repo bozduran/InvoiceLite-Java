@@ -11,26 +11,15 @@ import java.awt.*;
 public class ContentPanel extends JPanel {
 
     private JTabbedPane tabbedPane;
-    private JPanel cardPanel;
-    private CardLayout cardLayout;
+    private JPanel      cardPanel;
+    private CardLayout  cardLayout;
 
     public ContentPanel() {
         setLayout(new BorderLayout());
 
-/*        tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("new",new JColorChooser());*/
+        this.cardLayout = new CardLayout();
+        this.cardPanel = new JPanel(this.cardLayout);
 
-
-        cardLayout = new CardLayout();
-        cardPanel = new JPanel(cardLayout);
-
-        // Initialize the tabbedPane
-/*
-        tabbedPane = new JTabbedPane();
-*/
-
-        // Add the tabbedPane to the cardPanel with a unique name
-        //cardPanel.add(tabbedPane, "TabbedPane");
 
         add(cardPanel, BorderLayout.CENTER);
     }
@@ -41,7 +30,7 @@ public class ContentPanel extends JPanel {
 
     public void showCard(String name) {
         if (name != null) {
-            cardLayout.show(cardPanel, name);
+            this.cardLayout.show(this.cardPanel, name);
         }
     }
 

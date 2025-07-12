@@ -13,38 +13,37 @@ import java.util.Optional;
 
 public class ShowReceiptsPanel extends JPanel {
 
-    private final ReceiptDao receiptDao;
-    private JPanel receiptsPanel;
-    private ReceiptsInfoPanel receiptsInfoPanel;
-    private Optional<List<Receipt>> receipts;
+    private final ReceiptDao              receiptDao;
+    private       ReceiptsInfoPanel       receiptsInfoPanel;
+    private       Optional<List<Receipt>> receipts;
 
     private JList<Receipt> receiptJList;
-    private JScrollPane listScroller;
+    private JScrollPane    listScroller;
 
     public ShowReceiptsPanel() {
         this.receiptDao = ReceiptDaoImpl.getInstance();
         setLayout(new GridLayout(3, 1));
 
 
-        receipts = receiptDao.getReceipts();
+        this.receipts = receiptDao.getReceipts();
 
-        if (receipts.isPresent()) {
-            receiptJList = new JList<>(receipts.get().toArray(new Receipt[0]));
-            receiptJList.addListSelectionListener(e -> {
+        if (this.receipts.isPresent()) {
+            this.receiptJList = new JList<>(this.receipts.get().toArray(new Receipt[0]));
+            this.receiptJList.addListSelectionListener(e -> {
                 showReceipt(e.getFirstIndex());
             });
-            receiptJList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+            this.receiptJList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
-            receiptJList.setVisibleRowCount(-1);
+            this.receiptJList.setVisibleRowCount(-1);
 
-            listScroller = new JScrollPane(receiptJList);
-            listScroller.setPreferredSize(new Dimension(250, 80));
-            add(listScroller);
+            this.listScroller = new JScrollPane(this.receiptJList);
+            this.listScroller.setPreferredSize(new Dimension(250, 80));
+            add(this.listScroller);
         }
 
-        receiptsInfoPanel = new ReceiptsInfoPanel();
+        this.receiptsInfoPanel = new ReceiptsInfoPanel();
 
-        add(receiptsInfoPanel);
+        add(this.receiptsInfoPanel);
 
         JButton deleteButton = new JButton(Language.getInstance().getMessage("delete.receipt"));
         deleteButton.addActionListener(e -> {
@@ -56,19 +55,19 @@ public class ShowReceiptsPanel extends JPanel {
     }
 
     public void deleteReceipt() {
-        receiptsInfoPanel.deleteReceipt();
+        this.receiptsInfoPanel.deleteReceipt();
         // if it has data return data or return an empty arraylist
-        receiptJList.setListData(receipts.orElseGet(ArrayList::new).toArray(new Receipt[0]));
-        listScroller.repaint();
+        this.receiptJList.setListData(this.receipts.orElseGet(ArrayList::new).toArray(new Receipt[0]));
+        this.listScroller.repaint();
     }
 
     private void showReceipt(int firstIndex) {
-        if (receipts.isPresent()) {
-            if (receipts.get().size() <= firstIndex) {
+        if (this.receipts.isPresent()) {
+            if (this.receipts.get().size() <= firstIndex) {
                 firstIndex = 0;
             }
         }
-        receiptsInfoPanel.setReceipt(receipts.orElseGet(ArrayList::new).get(firstIndex));
+        this.receiptsInfoPanel.setReceipt(this.receipts.orElseGet(ArrayList::new).get(firstIndex));
     }
 
 }

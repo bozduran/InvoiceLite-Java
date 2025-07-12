@@ -17,20 +17,20 @@ import java.util.List;
 public class ShoppingCart {
 
     private HashMap<Integer, CartItem> cartItems;
-    private double totalPrice;
-    private int totalQuantity;
+    private double                     totalPrice;
+    private int                        totalQuantity;
 
 
     public ShoppingCart() {
-        totalPrice = 0;
-        totalQuantity = 0;
-        cartItems = new HashMap<>();
+        this.totalPrice = 0;
+        this.totalQuantity = 0;
+        this.cartItems = new HashMap<>();
     }
 
     public void addToCart(Product product) {
 
-        if (cartItems.containsKey(product.getId()) &&
-                !(cartItems.get(product.getId()).getQuantity() + 1 >= product.getQuantity())) {
+        if (this.cartItems.containsKey(product.getId()) &&
+                !(this.cartItems.get(product.getId()).getQuantity() + 1 >= product.getQuantity())) {
             JOptionPane.showMessageDialog(new JOptionPane(),
                     Language.getInstance().getMessage("no.available.products"),
                     product.getName(), JOptionPane.WARNING_MESSAGE);
@@ -38,10 +38,10 @@ public class ShoppingCart {
         }
 
 
-        if (cartItems.containsKey(product.getId())) {
+        if (this.cartItems.containsKey(product.getId())) {
             incrementCartItemQuantity(product.getId());
         } else {
-            cartItems.put(product.getId(), new CartItem(product));
+            this.cartItems.put(product.getId(), new CartItem(product));
         }
 
         calculateTotalPriceAndQuantity();
@@ -51,41 +51,42 @@ public class ShoppingCart {
 
     public void calculateTotalPriceAndQuantity() {
 
-        totalPrice = 0;
-        totalQuantity = 0;
 
-        for (CartItem tempCartItem : cartItems.values()) {
-            totalQuantity = totalQuantity + tempCartItem.getQuantity();
-            totalPrice = totalPrice + (tempCartItem.getQuantity() * tempCartItem.getPrice());
-        }
+        this.totalQuantity = cartItems.values().stream()
+                .mapToInt(CartItem::getQuantity)
+                .sum();
+
+        this.totalPrice = cartItems.values().stream()
+                .mapToDouble(item -> item.getQuantity() * item.getPrice())
+                .sum();
 
     }
 
     public void decrementCartItemQuantity(int productId) {
 
-        if (!cartItems.containsKey(productId)) {
+        if (!this.cartItems.containsKey(productId)) {
             return;
         }
 
-        if (cartItems.get(productId).getQuantity() == 1) {
-            cartItems.remove(productId);
+        if (this.cartItems.get(productId).getQuantity() == 1) {
+            this.cartItems.remove(productId);
         } else {
-            cartItems.get(productId).decreaseQuantity();
+            this.cartItems.get(productId).decreaseQuantity();
         }
 
     }
 
     public void incrementCartItemQuantity(int productId) {
-        if (!cartItems.containsKey(productId)) {
+        if (!this.cartItems.containsKey(productId)) {
             return;
         }
-        cartItems.get(productId).incrementQuantity();
+        this.cartItems.get(productId).incrementQuantity();
     }
 
     public Object[][] getDataVector() {
         List<Object[]> dataList = new ArrayList<>();
 
-        for (CartItem tempCartItem : cartItems.values()) {
+        for (CartItem tempCartItem : this.cartItems.values()) {
             Object[] row = {
                     tempCartItem.getId(),
                     tempCartItem.getName(),
@@ -101,9 +102,9 @@ public class ShoppingCart {
     }
 
     public void removeItem(int productId) {
-        if (!cartItems.containsKey(productId)) {
+        if (!this.cartItems.containsKey(productId)) {
             return;
         }
-        cartItems.remove(productId);
+        this.cartItems.remove(productId);
     }
 }

@@ -2,7 +2,8 @@ package org.bozntouran.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.math.BigInteger;
@@ -36,9 +37,9 @@ public class Manufacturer {
 
     public void addProducts(@Valid Product product) {
 
-        if (!products.contains(product)) {
+        if (!this.products.contains(product)) {
             product.setManufacturer(this);
-            products.add(product);
+            this.products.add(product);
         }
 
     }

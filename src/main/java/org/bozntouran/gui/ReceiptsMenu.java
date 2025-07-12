@@ -27,7 +27,7 @@ public class ReceiptsMenu extends JMenu {
     }
 
     public void createNewReceiptTab() {
-        contentPanel.addNewCard(new ReceiptsPanel(), "Receipt");
-        contentPanel.showCard("Receipt");
+        this.contentPanel.addNewCard(new ReceiptsPanel(), "Receipt");
+        this.contentPanel.showCard("Receipt");
     }
 }

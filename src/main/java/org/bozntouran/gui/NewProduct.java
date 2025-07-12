@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Log4j2
 public class NewProduct extends JPanel {
 
-    private ProductDao productDao;
+    private ProductDao      productDao;
     private ManufacturerDao manufacturerDao;
 
     private JTextField productName;
@@ -55,12 +55,12 @@ public class NewProduct extends JPanel {
         add(new JLabel(Language.getInstance().getMessage("product.quantity")));
         add(this.productQuantity = new JTextField());
         add(new JLabel(Language.getInstance().getMessage("product.manufacturer")));
-        String[] manufacturerNames = Arrays.stream(manufacturers)
+        String[] manufacturerNames = Arrays.stream(this.manufacturers)
                 .map(Manufacturer::getName)
                 .toArray(String[]::new);
-        manufacturerComboBox = new JComboBox<>(manufacturerNames);
+        this.manufacturerComboBox = new JComboBox<>(manufacturerNames);
 
-        add(manufacturerComboBox);
+        add(this.manufacturerComboBox);
 
         JButton saveButton = new JButton(Language.getInstance().getMessage("product.save"));
         saveButton.addActionListener(e -> {
@@ -71,62 +71,62 @@ public class NewProduct extends JPanel {
     }
 
     private void populateManufacturers() {
-        Optional<List<Manufacturer>> result = manufacturerDao.getManufacturers();
-        result.ifPresent(manufacturerList -> manufacturers = manufacturerList.toArray(new Manufacturer[0]));
+        Optional<List<Manufacturer>> result = this.manufacturerDao.getManufacturers();
+        result.ifPresent(manufacturerList -> this.manufacturers = manufacturerList.toArray(new Manufacturer[0]));
 
     }
 
     private void saveProduct() {
         Manufacturer productManufacturer = null;
-        for (Manufacturer manufacturer : manufacturers) {
-            if (manufacturer.getName().equals(manufacturerComboBox.getSelectedItem())) {
+        for (Manufacturer manufacturer : this.manufacturers) {
+            if (manufacturer.getName().equals(this.manufacturerComboBox.getSelectedItem())) {
                 productManufacturer = manufacturer;
             }
         }
 
-        if (!checkIfNumeric(productQuantity.getText())) {
+        if (!checkIfNumeric(this.productQuantity.getText())) {
             JOptionPane.showMessageDialog(this, Language.getInstance().getMessage("error.product.quantity"),
                     Language.getInstance().getMessage("error.product.quantity.title"), JOptionPane.WARNING_MESSAGE);
             return;
         }
-        if (!checkIfNumeric(productPrice.getText())) {
+        if (!checkIfNumeric(this.productPrice.getText())) {
             JOptionPane.showMessageDialog(this, Language.getInstance().getMessage("error.product.price")
                     , Language.getInstance().getMessage("error.product.price.title"), JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         Product product = new Product(
-                productName.getText()
-                , productDescription.getText()
-                , productBarcode.getText()
-                , Double.parseDouble(productPrice.getText())
-                , Integer.parseInt(productQuantity.getText())
+                this.productName.getText()
+                , this.productDescription.getText()
+                , this.productBarcode.getText()
+                , Double.parseDouble(this.productPrice.getText())
+                , Integer.parseInt(this.productQuantity.getText())
                 , productManufacturer
         );
 
-        if (!validateProduct(product)){
+        if (!validateProduct(product)) {
             return;
         }
 
-        boolean result = productDao.save(product);
+        boolean result = this.productDao.save(product);
 
         if (!result) {
             JOptionPane.showMessageDialog(this, Language.getInstance().getMessage("error.product.save"), Language.getInstance().getMessage("save"), JOptionPane.WARNING_MESSAGE);
-        }else {
+        } else {
             log.info("product added successfully");
         }
     }
 
-    public boolean validateProduct(Product product){
+    public boolean validateProduct(Product product) {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
         Set<ConstraintViolation<Product>> constraintViolations = validator.validate(product);
 
 
-        if (constraintViolations.isEmpty()){
+        if (constraintViolations.isEmpty()) {
             return true;
-        }else{
+        } else {
             StringBuilder stringBuilder = new StringBuilder(
                     constraintViolations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining()));
             JOptionPane.showMessageDialog(this, stringBuilder,

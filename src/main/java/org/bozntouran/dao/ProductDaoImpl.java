@@ -15,7 +15,7 @@ import java.util.Optional;
 public class ProductDaoImpl implements ProductDao {
 
     private static ProductDaoImpl instance;
-    private SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
+    private        SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
 
 
     private ProductDaoImpl() {

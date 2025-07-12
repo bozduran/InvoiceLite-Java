@@ -10,7 +10,7 @@ import org.bozntouran.entities.Product;
 @AllArgsConstructor
 public class CartItem {
 
-    private int id;
+    private int    id;
     private String barcode;
     private String name;
     private String description;

@@ -9,10 +9,10 @@ import java.util.HashMap;
 
 public class RecurringInvoice implements Invoice {
 
-    private String filename;
+    private String                     filename;
     private HashMap<Integer, CartItem> cartItems;
-    private double totalPrice;
-    private int totalQuantity;
+    private double                     totalPrice;
+    private int                        totalQuantity;
 
 
     @Override

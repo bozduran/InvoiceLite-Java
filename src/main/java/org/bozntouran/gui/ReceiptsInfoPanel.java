@@ -14,7 +14,7 @@ public class ReceiptsInfoPanel extends JPanel {
     private JTextField fileNameTextField;
     private JTextField amountTextField;
     private JTextField dateTextField;
-    private int id; // will make it later for update
+    private int        id; // will make it later for update
     private ReceiptDao receiptDao;
 
     public ReceiptsInfoPanel() {
@@ -22,29 +22,29 @@ public class ReceiptsInfoPanel extends JPanel {
         this.receiptDao = ReceiptDaoImpl.getInstance();
 
         add(new JLabel(Language.getInstance().getMessage("receipt.name")));
-        fileNameTextField = new JTextField();
-        add(fileNameTextField);
+        this.fileNameTextField = new JTextField();
+        add(this.fileNameTextField);
         add(new JLabel(Language.getInstance().getMessage("total.price")));
-        amountTextField = new JTextField();
-        add(amountTextField);
+        this.amountTextField = new JTextField();
+        add(this.amountTextField);
         add(new JLabel(Language.getInstance().getMessage("receipt.date")));
-        dateTextField = new JTextField();
-        add(dateTextField);
+        this.dateTextField = new JTextField();
+        add(this.dateTextField);
 
 
     }
 
     public void setReceipt(Receipt receipt) {
-        id = receipt.getId();
-        dateTextField.setText(receipt.getDate().toString());
-        fileNameTextField.setText(receipt.getFilename());
-        amountTextField.setText(Double.toString(receipt.getPrice()));
+        this.id = receipt.getId();
+        this.dateTextField.setText(receipt.getDate().toString());
+        this.fileNameTextField.setText(receipt.getFilename());
+        this.amountTextField.setText(Double.toString(receipt.getPrice()));
     }
 
     public void deleteReceipt() {
-        receiptDao.delete(id);
+        this.receiptDao.delete(id);
         try {
-            File file = new File("receipts_pdf_folder/" + fileNameTextField.getText());
+            File file = new File("receipts_pdf_folder/" + this.fileNameTextField.getText());
             if (file.exists()) {
                 file.delete();
             }

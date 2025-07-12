@@ -27,17 +27,17 @@ import java.util.Set;
 @Log4j2
 public class ReceiptsPanel extends JPanel implements KeyListener {
 
-    private static final DecimalFormat df = new DecimalFormat("0.00");
-    private final Object[] columnNames;
-    private StringBuilder barcodeString;
-    private DefaultTableModel shoppingCartTable;
-    private JPanel customerInfoPanel;
-    private ProductDao productDao;
-    private ReceiptDao receiptDao;
-    private ShoppingCart shoppingCart;
-    private Invoice invoice;
-    private JLabel totalPriceJLable;
-    private JLabel totalQuantityLable;
+    private static final DecimalFormat     df = new DecimalFormat("0.00");
+    private final        Object[]          columnNames;
+    private              StringBuilder     barcodeString;
+    private       DefaultTableModel shoppingCartTable;
+    private final JPanel            customerInfoPanel;
+    private       ProductDao        productDao;
+    private              ReceiptDao        receiptDao;
+    private              ShoppingCart      shoppingCart;
+    private              Invoice           invoice;
+    private              JLabel            totalPriceJLable;
+    private              JLabel            totalQuantityLable;
 
     public ReceiptsPanel() {
         initialize();
@@ -56,7 +56,7 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
 
         // this is the customer info panel
         this.customerInfoPanel = new CustomerInfoPanel();
-        add(customerInfoPanel);
+        add(this.customerInfoPanel);
 
 
         // jtable and option for cart management
@@ -76,17 +76,17 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
     public void initialize() {
         this.barcodeString = new StringBuilder();
         this.shoppingCart = new ShoppingCart();
-        receiptDao = ReceiptDaoImpl.getInstance();
-        productDao = ProductDaoImpl.getInstance();
+        this.receiptDao = ReceiptDaoImpl.getInstance();
+        this.productDao = ProductDaoImpl.getInstance();
 
     }
 
     private JPanel createOrderItemPanel() {
 
         // show scanned products
-        shoppingCartTable = new DefaultTableModel(null, columnNames);
+        this.shoppingCartTable = new DefaultTableModel(null, this.columnNames);
 
-        JTable orderItemsJTable = new JTable(shoppingCartTable);
+        JTable orderItemsJTable = new JTable(this.shoppingCartTable);
         orderItemsJTable.addKeyListener(this); //regain focus here so scanner can add new products
 
         // jtable and option for cart management
@@ -104,8 +104,8 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
         orderManagementButtons.add(new JButton(new AbstractAction("-") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Object selectedObject = shoppingCart.getDataVector()[orderItemsJTable.getSelectedRow()][0];
-                shoppingCart.decrementCartItemQuantity(Integer.parseInt(selectedObject.toString()));
+                Object selectedObject = ReceiptsPanel.this.shoppingCart.getDataVector()[orderItemsJTable.getSelectedRow()][0];
+                ReceiptsPanel.this.shoppingCart.decrementCartItemQuantity(Integer.parseInt(selectedObject.toString()));
                 refreshShoppingCart();
 
             }
@@ -113,8 +113,8 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
         orderManagementButtons.add(new JButton(new AbstractAction("+") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Object selectedObject = shoppingCart.getDataVector()[orderItemsJTable.getSelectedRow()][0];
-                shoppingCart.incrementCartItemQuantity(Integer.parseInt(selectedObject.toString()));
+                Object selectedObject = ReceiptsPanel.this.shoppingCart.getDataVector()[orderItemsJTable.getSelectedRow()][0];
+                ReceiptsPanel.this.shoppingCart.incrementCartItemQuantity(Integer.parseInt(selectedObject.toString()));
                 refreshShoppingCart();
 
 
@@ -123,8 +123,8 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
         orderManagementButtons.add(new JButton(new AbstractAction(Language.getInstance().getMessage("remove.product.from.cart")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Object selectedObject = shoppingCart.getDataVector()[orderItemsJTable.getSelectedRow()][0];
-                shoppingCart.removeItem(Integer.parseInt(selectedObject.toString()));
+                Object selectedObject = ReceiptsPanel.this.shoppingCart.getDataVector()[orderItemsJTable.getSelectedRow()][0];
+                ReceiptsPanel.this.shoppingCart.removeItem(Integer.parseInt(selectedObject.toString()));
                 refreshShoppingCart();
 
 
@@ -138,21 +138,21 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
 
         /// This is used to see the price and quantity add to the bottom
 
-        totalPriceJLable = new JLabel(Language.getInstance().getMessage("total.price.with.space") + 0);
-        totalQuantityLable = new JLabel(Language.getInstance().getMessage("total.quantity.with.space") + 0);
+        this.totalPriceJLable = new JLabel(Language.getInstance().getMessage("total.price.with.space") + 0);
+        this.totalQuantityLable = new JLabel(Language.getInstance().getMessage("total.quantity.with.space") + 0);
 
         JButton printInvoiceButton = new JButton(Language.getInstance().getMessage("print.receipt"));
 
         // print invoice
         printInvoiceButton.addActionListener(e -> {
-            if (!shoppingCart.getCartItems().isEmpty()) {
+            if (!this.shoppingCart.getCartItems().isEmpty()) {
                 printInvoice();
             }
         });
 
         JPanel printInvoicePanel = new JPanel(new GridLayout(1, 3));
-        printInvoicePanel.add(totalPriceJLable);
-        printInvoicePanel.add(totalQuantityLable);
+        printInvoicePanel.add(this.totalPriceJLable);
+        printInvoicePanel.add(this.totalQuantityLable);
         printInvoicePanel.add(printInvoiceButton);
 
         return printInvoicePanel;
@@ -173,7 +173,7 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
 
     public void refreshShoppingCart() {
         requestFocusInWindow(true);
-        this.shoppingCartTable.setDataVector(shoppingCart.getDataVector(), columnNames);
+        this.shoppingCartTable.setDataVector(this.shoppingCart.getDataVector(), this.columnNames);
     }
 
     @Override
@@ -188,10 +188,10 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyChar() == KeyEvent.VK_ENTER) {
 
-            Product p = productDao.getProductByBarcode(this.barcodeString.toString().trim());
+            Product p = this.productDao.getProductByBarcode(this.barcodeString.toString().trim());
             if (p != null) {
 
-                shoppingCart.addToCart(p);
+                this.shoppingCart.addToCart(p);
                 updatePriceAndQuantity();
                 refreshShoppingCart();
             }
@@ -215,53 +215,53 @@ public class ReceiptsPanel extends JPanel implements KeyListener {
     }
 
     public void updatePriceAndQuantity() {
-        totalPriceJLable.setText(Language.getInstance().getMessage("total.price.with.space") + String.valueOf(df.format(shoppingCart.getTotalPrice())));
-        totalQuantityLable.setText(Language.getInstance().getMessage("total.quantity.with.space") + String.valueOf(shoppingCart.getTotalQuantity()));
+        this.totalPriceJLable.setText(Language.getInstance().getMessage("total.price.with.space") + df.format(this.shoppingCart.getTotalPrice()));
+        this.totalQuantityLable.setText(Language.getInstance().getMessage("total.quantity.with.space") + this.shoppingCart.getTotalQuantity());
     }
 
     public void updateQuantityInDataBase() {
-        var cartItems = shoppingCart.getCartItems();
+        var cartItems = this.shoppingCart.getCartItems();
 
         for (CartItem tempCartItem : cartItems.values()) {
             System.out.println(tempCartItem.toString());
-            productDao.updateProductQuantity("-", tempCartItem.getId(), tempCartItem.getQuantity());
+            this.productDao.updateProductQuantity("-", tempCartItem.getId(), tempCartItem.getQuantity());
         }
 
     }
 
     public void printInvoice() {
         updateQuantityInDataBase();
-        invoice = new SimpleReceipt();
-        invoice.setCartItems(shoppingCart.getCartItems());
-        invoice.setTotalPrice(shoppingCart.getTotalPrice());
-        invoice.setTotalQuantity(shoppingCart.getTotalQuantity());
-        invoice.createInvoice(); // print the pdf to a pdf file
+        this.invoice = new SimpleReceipt();
+        this.invoice.setCartItems(this.shoppingCart.getCartItems());
+        this.invoice.setTotalPrice(this.shoppingCart.getTotalPrice());
+        this.invoice.setTotalQuantity(this.shoppingCart.getTotalQuantity());
+        this.invoice.createInvoice(); // print the pdf to a pdf file
 
-        Receipt receipt = new Receipt(shoppingCart.getTotalPrice(),
-                invoice.getReceiptDate(),
-                invoice.getFilename());
+        Receipt receipt = new Receipt(this.shoppingCart.getTotalPrice(),
+                this.invoice.getReceiptDate(),
+                this.invoice.getFilename());
 
 
-        if(!validateReceipt(receipt)){
+        if (!validateReceipt(receipt)) {
             return;
         }
 
-        boolean result = receiptDao.save(receipt);
-        if (result){
+        boolean result = this.receiptDao.save(receipt);
+        if (result) {
             log.info("receipt saved successfully");
         }
 
     }
 
-    public boolean validateReceipt(Receipt receipt){
+    public boolean validateReceipt(Receipt receipt) {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
         Set<ConstraintViolation<Receipt>> constraintViolations = validator.validate(receipt);
 
-        if (constraintViolations.isEmpty()){
+        if (constraintViolations.isEmpty()) {
             return true;
-        }else{
+        } else {
             StringBuilder stringBuilder = new StringBuilder(constraintViolations.stream().map(ConstraintViolation::getMessage).toString());
             JOptionPane.showMessageDialog(this, stringBuilder, "Constraints violation", JOptionPane.WARNING_MESSAGE);
         }
